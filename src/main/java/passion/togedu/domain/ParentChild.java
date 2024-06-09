@@ -38,8 +38,8 @@ public class ParentChild {
 
 
     // 기본 생성자
-    protected ParentChild() {
-    }
+//    protected ParentChild() {
+//    }
 
     // 필드를 설정할 수 있는 생성자
     public ParentChild(Parent parent, Child child, int uniqueCode) {
