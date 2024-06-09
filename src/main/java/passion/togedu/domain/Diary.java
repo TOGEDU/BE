@@ -34,8 +34,8 @@ public class Diary {
     private String imgUrl;
 
     // 기본 생성자
-    protected Diary() {
-    }
+//    protected Diary() {
+//    }
 
     // 필드를 설정할 수 있는 생성자
     public Diary(ParentChild parentChild, LocalDateTime date, String text, String imgUrl) {
