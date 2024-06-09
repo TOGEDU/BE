@@ -44,4 +44,6 @@ public class Parent {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<DailyQuestionRecord> dailyQuestionRecordList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    private List<ParentChild> parentChildList;
 }

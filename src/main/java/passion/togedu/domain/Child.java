@@ -45,5 +45,7 @@ public class Child {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "child")
     private List<ChatRoom> chatRoomList;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "child")
+    private ParentChild parentChild;
 
 }
