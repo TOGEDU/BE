@@ -35,6 +35,8 @@ public class ParentChild {
     @OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Diary> diaries = new ArrayList<>();
 
+
+
     // 기본 생성자
     protected ParentChild() {
     }
