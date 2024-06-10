@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ParentVerificationResponseDTO {
-    // 부모 본인 인증 시 사용되는 DTO
+public class ParentVerificationResponseDto {
+    // 부모 본인 인증 시 사용되는 Dto
     private Boolean success;
     private String parentCode;
     private Integer parentId;
