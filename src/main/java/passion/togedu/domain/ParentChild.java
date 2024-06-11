@@ -29,7 +29,7 @@ public class ParentChild {
     @JoinColumn(name = "child_id")
     private Child child;
 
-    @Column(name = "unique_code", length = 50)
+    @Column(name = "unique_code")
     private String uniqueCode;
 
     @OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
