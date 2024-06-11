@@ -29,8 +29,8 @@ public class ParentChild {
     @JoinColumn(name = "child_id")
     private Child child;
 
-    @Column(name = "unique_code")
-    private int uniqueCode;
+    @Column(name = "unique_code", length = 50)
+    private String uniqueCode;
 
     @OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Diary> diaries = new ArrayList<>();
@@ -42,7 +42,7 @@ public class ParentChild {
 //    }
 
     // 필드를 설정할 수 있는 생성자
-    public ParentChild(Parent parent, Child child, int uniqueCode) {
+    public ParentChild(Parent parent, Child child, String uniqueCode) {
         this.parent = parent;
         this.child = child;
         this.uniqueCode = uniqueCode;
