@@ -25,19 +25,19 @@ public class SignController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/child/check") // 자식 회원가입 - 부모님 조회
+    @GetMapping("/child/check") // 자녀 회원가입 - 부모님 조회
     public ResponseEntity<ChildCheckResponseDto> checkChild(@RequestParam("uniqueCode") String uniqueCode){
         ChildCheckResponseDto responseDto = signService.checkChild(uniqueCode);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/child/sign-up")
+    @PostMapping("/child/sign-up") // 자녀 회원 가입 - 회원 가입
     public ResponseEntity<SignUpResponseDto> childSignUp(@RequestBody ChildSignUpRequestDto childSignUpRequestDto){
         SignUpResponseDto responseDto = signService.childSignUp(childSignUpRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping("/sign-in") // 로그인
     public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto signInRequestDto){
         SignInResponseDto responseDto = signService.signIn(signInRequestDto);
         return ResponseEntity.ok(responseDto);

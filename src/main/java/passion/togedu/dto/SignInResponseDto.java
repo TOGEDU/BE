@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SignInResponseDto {
+    // 로그인 시 사용되는 dto
     private Boolean success;
     private String msg;
     private String role;
