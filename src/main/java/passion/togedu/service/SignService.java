@@ -1,6 +1,9 @@
 package passion.togedu.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +11,7 @@ import passion.togedu.domain.Child;
 import passion.togedu.domain.Parent;
 import passion.togedu.domain.ParentChild;
 import passion.togedu.dto.*;
+import passion.togedu.jwt.TokenProvider;
 import passion.togedu.repository.ChildRepository;
 import passion.togedu.repository.ParentChildRepository;
 import passion.togedu.repository.ParentRepository;
@@ -27,6 +31,9 @@ public class SignService {
     private final PasswordEncoder passwordEncoder;
     private static final Random RANDOM = new SecureRandom();
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    private final TokenProvider tokenProvider;
 
     // 부모 회원 가입 - 본인 인증
     @Transactional
@@ -147,39 +154,26 @@ public class SignService {
                 .build();
     }
 
-//    @Transactional
-//    public SignInResponseDto signIn(SignInRequestDto requestDto){
-//
-//        if (parentRepository.existsByEmail(requestDto.getEmail())) { // 이메일이 부모에서 발견될 경우
-//            for(Parent parent: parentRepository.findByEmail(requestDto.getEmail())){ // 발견된 이메일이 여러 개일 경우
-//                if (passwordEncoder.matches(requestDto.getPassword(), parent.getPassword())){
-//                    String token = jwtGenerator.generateToken(parent.getId(), "parent");
-//                    return SignInResponseDto.builder()
-//                            .success(Boolean.TRUE)
-//                            .msg("부모 로그인 성공")
-//                            .role("parent")
-//                            .token(token)
-//                            .build();
-//                }
-//            }
-//        }
-//
-//        if (childRepository.existsByEmail(requestDto.getEmail())) { // 이메일이 자녀에서 발견될 경우
-//            for(Child child: childRepository.findByEmail(requestDto.getEmail())){
-//                if (passwordEncoder.matches(requestDto.getPassword(), child.getPassword())){
-//                    String token = jwtGenerator.generateToken(child.getId(), "child");
-//                    return SignInResponseDto.builder()
-//                            .success(Boolean.TRUE)
-//                            .msg("자녀 로그인 성공")
-//                            .role("child")
-//                            .token(token)
-//                            .build();
-//                }
-//            }
-//        }
-//        throw new RuntimeException();
-//    }
-//
-//
+    @Transactional // 로그인 시도한 ID / PW String
+    public SignInResponseDto signIn(SignInRequestDto requestDto){
+        // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
+
+        // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
+        //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // 5. 토큰 발급
+        return SignInResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("로그인 성공")
+                .role(tokenDto.getRole())
+                .grantType(tokenDto.getGrantType())
+                .token(tokenDto.getAccessToken())
+                .build();
+    }
 
 }

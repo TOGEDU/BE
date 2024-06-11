@@ -37,11 +37,13 @@ public class SignController {
         return ResponseEntity.ok(responseDto);
     }
 
-//    @PostMapping("/sign-in")
-//    public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto signInRequestDto){
-//        SignInResponseDto responseDto = signService.signIn(signInRequestDto);
-//        return ResponseEntity.ok(responseDto);
-//    }
+    @PostMapping("/sign-in")
+    public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto signInRequestDto){
+        SignInResponseDto responseDto = signService.signIn(signInRequestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
 
 
 }
