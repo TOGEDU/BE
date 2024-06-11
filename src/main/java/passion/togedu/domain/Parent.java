@@ -32,7 +32,7 @@ public class Parent {
 
     private LocalTime pushNotificationTime;
 
-    @Column(length = 50)
+    @Column(length = 500)
     private String password;
 
     @Column(length = 50)

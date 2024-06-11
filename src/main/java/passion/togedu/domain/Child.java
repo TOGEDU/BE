@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Child {
     private String name;
 
     @Column
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(length = 100)
     private String email;
@@ -33,7 +34,7 @@ public class Child {
     @Column
     private LocalTime pushNotificationTime; //그냥 이렇게 해도 되는걸까요
 
-    @Column(length = 50)
+    @Column(length = 500)
     private String password;
 
     @Column(length = 500)
