@@ -3,15 +3,9 @@ package passion.togedu.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import passion.togedu.domain.Child;
-import passion.togedu.domain.ParentChild;
-import passion.togedu.dto.ChildName;
 import passion.togedu.dto.mypage.ChildIdAndName;
-import passion.togedu.dto.mypage.MypageChildResponseDto;
-import passion.togedu.dto.mypage.MypageParentResponseDto;
 import passion.togedu.service.MypageService;
 
 import java.io.IOException;
@@ -69,6 +63,14 @@ public class MypageController {
         Integer id = getCurrentMemberId();
         mypageService.addChild(id, childName);
         return ResponseEntity.ok("자녀 추가 완료");
+    }
+
+    @PutMapping("/push-status")
+    public ResponseEntity<String> changePushNotificationStatus(@RequestParam("pushStatus") Boolean pushStatus){
+        Integer id = getCurrentMemberId();
+        String role = getCurrentMemberRole();
+        mypageService.changePushNotificationStatus(id, role, pushStatus);
+        return ResponseEntity.ok("푸시 알림 상태 변경 완료");
     }
 
 }

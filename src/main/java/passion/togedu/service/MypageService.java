@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Child;
-import passion.togedu.domain.Image;
 import passion.togedu.domain.Parent;
 import passion.togedu.domain.ParentChild;
-import passion.togedu.dto.ChildName;
 import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.dto.mypage.MypageChildResponseDto;
 import passion.togedu.dto.mypage.MypageParentResponseDto;
@@ -89,7 +87,7 @@ public class MypageService {
             parent.setPushNotificationTime(pushNotificationTime);
             parentRepository.save(parent);
         } else if (role.equals("Child")) {
-            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("Child 사용자를 찾을 수 없습니다."));
             child.setPushNotificationTime(pushNotificationTime);
             childRepository.save(child);
         }else {
@@ -99,7 +97,7 @@ public class MypageService {
 
     @Transactional
     public void changeChildName(ChildIdAndName childIdAndName){
-        Child child = childRepository.findById(childIdAndName.getChildId()).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        Child child = childRepository.findById(childIdAndName.getChildId()).orElseThrow(() -> new RuntimeException("Child 사용자를 찾을 수 없습니다."));
         child.setName(childIdAndName.getName());
         childRepository.save(child);
     }
@@ -138,6 +136,21 @@ public class MypageService {
             sb.append(CHARACTERS.charAt(index));
         }
         return sb.toString();
+    }
+
+    @Transactional
+    public void changePushNotificationStatus(Integer id, String role, Boolean pushStatus){
+        if (role.equals("Parent")){
+            Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+            parent.setPushStatus(pushStatus);
+            parentRepository.save(parent);
+        } else if (role.equals("Child")) {
+            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("Child 사용자를 찾을 수 없습니다."));
+            child.setPushStatus(pushStatus);
+            childRepository.save(child);
+        }else {
+            throw new RuntimeException("사용자의 역할이 정해져 있지 않습니다.");
+        }
     }
 
 
