@@ -11,6 +11,7 @@ import passion.togedu.dto.mypage.MypageParentResponseDto;
 import passion.togedu.service.MypageService;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberRole;
@@ -43,6 +44,14 @@ public class MypageController {
         Integer id = getCurrentMemberId();
         mypageService.changeProfileImage(id, image);
         return ResponseEntity.ok("프로필 사진 변경 완료");
+    }
+
+    @PutMapping("push-time")
+    public ResponseEntity<String> changePushNotificationTime(@RequestParam("pushNotificationTime") LocalTime pushNotificationTime){
+        Integer id = getCurrentMemberId();
+        String role = getCurrentMemberRole();
+        mypageService.changePushNotificationTime(id, role, pushNotificationTime);
+        return ResponseEntity.ok("알림 시간 변경 완료");
     }
 
 }

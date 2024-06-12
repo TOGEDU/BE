@@ -15,6 +15,7 @@ import passion.togedu.repository.ChildRepository;
 import passion.togedu.repository.ParentRepository;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +73,21 @@ public class MypageService {
 
         parentRepository.save(parent);
 
+    }
+
+    @Transactional
+    public void changePushNotificationTime(Integer id, String role, LocalTime pushNotificationTime){
+        if (role.equals("Parent")){
+            Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+            parent.setPushNotificationTime(pushNotificationTime);
+            parentRepository.save(parent);
+        } else if (role.equals("Child")) {
+            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+            child.setPushNotificationTime(pushNotificationTime);
+            childRepository.save(child);
+        }else {
+            throw new RuntimeException("사용자의 역할이 정해져 있지 않습니다.");
+        }
     }
 
 
