@@ -3,7 +3,9 @@ package passion.togedu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Child;
+import passion.togedu.domain.Image;
 import passion.togedu.domain.Parent;
 import passion.togedu.domain.ParentChild;
 import passion.togedu.dto.mypage.ChildIdAndName;
@@ -12,6 +14,7 @@ import passion.togedu.dto.mypage.MypageParentResponseDto;
 import passion.togedu.repository.ChildRepository;
 import passion.togedu.repository.ParentRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class MypageService {
     private final ParentRepository parentRepository;
     private final ChildRepository childRepository;
+    private final S3UploadService s3UploadService;
 
     @Transactional
     public MypageParentResponseDto getParentMypage(Integer id){
@@ -55,6 +59,19 @@ public class MypageService {
                 .pushNotificationTime(child.getPushNotificationTime())
                 .pushStatus(child.getPushStatus())
                 .build();
+    }
+
+    @Transactional
+    public void changeProfileImage(Integer id, MultipartFile img) throws IOException {
+
+        String imgUrl = s3UploadService.saveFile(img);
+
+        Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+
+        parent.setProfileImageUrl(imgUrl);
+
+        parentRepository.save(parent);
+
     }
 
 
