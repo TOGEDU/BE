@@ -34,7 +34,6 @@ public class ChatRoom {
     @JoinColumn(name = "child_id")
     private Child child;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy ="chatRoom")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
     private List<ChatMessage> messageList;
-
 }

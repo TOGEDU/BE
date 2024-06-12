@@ -18,7 +18,6 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @CreatedDate
     private LocalDateTime time;
 
@@ -26,7 +25,7 @@ public class ChatMessage {
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatroom_id")
+    @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
     @Builder
@@ -35,6 +34,5 @@ public class ChatMessage {
         this.message = message;
         this.chatRoom = chatRoom;
     }
-
 }
 
