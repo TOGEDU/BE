@@ -32,11 +32,12 @@ public class ParentChild {
     @Column(name = "unique_code")
     private String uniqueCode;
 
-    @OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Diary> diaries = new ArrayList<>();
+    /*@OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Diary> diaries = new ArrayList<>();*/
+    @OneToMany(mappedBy = "parentChild") private List<Diary> diaries;
 
 
-
+/*
     // 기본 생성자
 //    protected ParentChild() {
 //    }
@@ -57,6 +58,6 @@ public class ParentChild {
     public void removeDiary(Diary diary) {
         diaries.remove(diary);
         diary.setParentChild(null);
-    }
+    }*/
 }
 
