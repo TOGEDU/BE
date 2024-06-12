@@ -12,6 +12,7 @@ import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.dto.mypage.MypageChildResponseDto;
 import passion.togedu.dto.mypage.MypageParentResponseDto;
 import passion.togedu.repository.ChildRepository;
+import passion.togedu.repository.ParentChildRepository;
 import passion.togedu.repository.ParentRepository;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class MypageService {
     private final ParentRepository parentRepository;
     private final ChildRepository childRepository;
     private final S3UploadService s3UploadService;
+    private final ParentChildRepository parentChildRepository;
 
     @Transactional
     public MypageParentResponseDto getParentMypage(Integer id){
@@ -88,6 +90,13 @@ public class MypageService {
         }else {
             throw new RuntimeException("사용자의 역할이 정해져 있지 않습니다.");
         }
+    }
+
+    @Transactional
+    public void changeChildName(ChildIdAndName childIdAndName){
+        Child child = childRepository.findById(childIdAndName.getChildId()).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        child.setName(childIdAndName.getName());
+        childRepository.save(child);
     }
 
 

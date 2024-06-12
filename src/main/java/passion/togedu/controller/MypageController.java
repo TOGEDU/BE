@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.dto.mypage.MypageChildResponseDto;
 import passion.togedu.dto.mypage.MypageParentResponseDto;
 import passion.togedu.service.MypageService;
@@ -46,12 +47,18 @@ public class MypageController {
         return ResponseEntity.ok("프로필 사진 변경 완료");
     }
 
-    @PutMapping("push-time")
+    @PutMapping("/push-time")
     public ResponseEntity<String> changePushNotificationTime(@RequestParam("pushNotificationTime") LocalTime pushNotificationTime){
         Integer id = getCurrentMemberId();
         String role = getCurrentMemberRole();
         mypageService.changePushNotificationTime(id, role, pushNotificationTime);
         return ResponseEntity.ok("알림 시간 변경 완료");
+    }
+
+    @PutMapping("/child")
+    public ResponseEntity<String> changeChildName(@RequestBody ChildIdAndName child){
+        mypageService.changeChildName(child);
+        return ResponseEntity.ok("자녀 이름 변경 완료");
     }
 
 }
