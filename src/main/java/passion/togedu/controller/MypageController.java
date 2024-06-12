@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import passion.togedu.domain.Child;
+import passion.togedu.domain.ParentChild;
+import passion.togedu.dto.ChildName;
 import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.dto.mypage.MypageChildResponseDto;
 import passion.togedu.dto.mypage.MypageParentResponseDto;
@@ -59,6 +62,13 @@ public class MypageController {
     public ResponseEntity<String> changeChildName(@RequestBody ChildIdAndName child){
         mypageService.changeChildName(child);
         return ResponseEntity.ok("자녀 이름 변경 완료");
+    }
+
+    @PostMapping("/child")
+    public ResponseEntity<String> addChild(@RequestParam("name") String childName){
+        Integer id = getCurrentMemberId();
+        mypageService.addChild(id, childName);
+        return ResponseEntity.ok("자녀 추가 완료");
     }
 
 }
