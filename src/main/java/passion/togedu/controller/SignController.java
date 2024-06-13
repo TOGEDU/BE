@@ -3,7 +3,7 @@ package passion.togedu.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import passion.togedu.dto.*;
+import passion.togedu.dto.sign.*;
 import passion.togedu.service.SignService;
 
 @RequestMapping("/api/sign")
