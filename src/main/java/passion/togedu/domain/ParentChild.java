@@ -18,7 +18,6 @@ public class ParentChild {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "parent_child_id")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,32 +31,8 @@ public class ParentChild {
     @Column(name = "unique_code")
     private String uniqueCode;
 
-    /*@OneToMany(mappedBy = "parentChild", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Diary> diaries = new ArrayList<>();*/
-    @OneToMany(mappedBy = "parentChild") private List<Diary> diaries;
+    @OneToMany(mappedBy = "parentChild")
+    private List<Diary> diaries;
 
-
-/*
-    // 기본 생성자
-//    protected ParentChild() {
-//    }
-
-    // 필드를 설정할 수 있는 생성자
-    public ParentChild(Parent parent, Child child, String uniqueCode) {
-        this.parent = parent;
-        this.child = child;
-        this.uniqueCode = uniqueCode;
-    }
-
-    // 연관관계 메서드
-    public void addDiary(Diary diary) {
-        diaries.add(diary);
-        diary.setParentChild(this);
-    }
-
-    public void removeDiary(Diary diary) {
-        diaries.remove(diary);
-        diary.setParentChild(null);
-    }*/
 }
 
