@@ -176,4 +176,19 @@ public class SignService {
                 .build();
     }
 
+    @Transactional
+    public SignUpResponseDto checkEmailDuplicate(String email){
+        if (parentRepository.existsByEmail(email) || childRepository.existsByEmail(email)){
+            return SignUpResponseDto.builder()
+                    .success(Boolean.FALSE)
+                    .msg("이미 가입된 이메일입니다.")
+                    .build();
+        }else{
+            return SignUpResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .msg("이메일 중복 검사 통과")
+                    .build();
+        }
+    }
+
 }
