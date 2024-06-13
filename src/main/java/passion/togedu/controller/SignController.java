@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import passion.togedu.dto.sign.*;
 import passion.togedu.service.SignService;
 
+import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
+import static passion.togedu.jwt.SecurityUtil.getCurrentMemberRole;
+
 @RequestMapping("/api/sign")
 @RestController
 @RequiredArgsConstructor
@@ -46,6 +49,14 @@ public class SignController {
     @PostMapping("/sign-in") // 로그인
     public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto signInRequestDto){
         SignInResponseDto responseDto = signService.signIn(signInRequestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/logout") // 로그아웃
+    public ResponseEntity<SignUpResponseDto> logout(){
+        Integer id = getCurrentMemberId();
+        String role = getCurrentMemberRole();
+        SignUpResponseDto responseDto = signService.logout(id, role);
         return ResponseEntity.ok(responseDto);
     }
 

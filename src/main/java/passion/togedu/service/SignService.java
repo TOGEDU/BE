@@ -154,7 +154,7 @@ public class SignService {
                 .build();
     }
 
-    @Transactional // 로그인 시도한 ID / PW String
+    @Transactional // 로그인 시도한 ID / PW String -- 로그인 할 때 fcm 토큰을 객체에 저장해 줘야 함.
     public SignInResponseDto signIn(SignInRequestDto requestDto){
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
@@ -189,6 +189,25 @@ public class SignService {
                     .msg("이메일 중복 검사 통과")
                     .build();
         }
+    }
+
+    @Transactional
+    public SignUpResponseDto logout(Integer id, String role){
+        if (role.equals("Parent")){
+            Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+            parent.setFcmToken(null);
+            parentRepository.save(parent);
+        } else if (role.equals("Child")) {
+            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+            child.setFcmToken(null);
+            childRepository.save(child);
+        }else{
+            throw new RuntimeException("역할이 잘못된 사용자입니다.");
+        }
+        return SignUpResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("로그아웃 완료")
+                .build();
     }
 
 }
