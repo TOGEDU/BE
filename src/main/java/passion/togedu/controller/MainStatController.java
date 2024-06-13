@@ -32,8 +32,5 @@ public class MainStatController {
         return mainStatService.getMainCalendarDto(userId, year, month);
     }
 
-
-
-
 }
 

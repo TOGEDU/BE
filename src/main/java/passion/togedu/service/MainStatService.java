@@ -35,10 +35,7 @@ public class MainStatService {
         Integer answerCount = calculateStreak(dates);
 
         //녹음 퍼센트 계산
-        Integer recorded = voiceRecordingRecordRepository.countByUserId(userId);
-        Integer sentences = voiceRecordingSentenceRepository.countTotalSentences();
-        Integer recordPer = (sentences == 0) ? 0 : (recorded * 100) / sentences;
-        //(recordedCount * 100) / totalSentences; 0개일리 없으면 나중에 수정!
+        Integer recordPer = calRecordPer(userId);
 
         //일기 작성 개수 조회
         Integer diaryCount = diaryRepository.countAllDatesByUserId(userId);
@@ -110,6 +107,13 @@ public class MainStatService {
         }
 
         return streak;
+    }
+    private Integer calRecordPer(Integer userId){
+        Integer recorded = voiceRecordingRecordRepository.countByUserId(userId);
+        Integer sentences = voiceRecordingSentenceRepository.countTotalSentences();
+        Integer recordPer = (sentences == 0) ? 0 : (recorded * 100) / sentences;
+        //(recordedCount * 100) / totalSentences; 0개일리 없으면 나중에 수정!
+        return recordPer;
     }
     //dataAll 계산
     private int countAllData(Integer userId) {
