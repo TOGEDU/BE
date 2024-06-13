@@ -7,19 +7,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import passion.togedu.domain.Child;
-import passion.togedu.domain.Parent;
-import passion.togedu.domain.ParentChild;
+import passion.togedu.domain.*;
 import passion.togedu.dto.sign.*;
 import passion.togedu.jwt.TokenProvider;
-import passion.togedu.repository.ChildRepository;
-import passion.togedu.repository.ParentChildRepository;
-import passion.togedu.repository.ParentRepository;
+import passion.togedu.repository.*;
 
 import java.security.SecureRandom;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,8 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final TokenProvider tokenProvider;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     // 부모 회원 가입 - 본인 인증
     @Transactional
@@ -209,5 +209,38 @@ public class SignService {
                 .msg("로그아웃 완료")
                 .build();
     }
+
+    @Transactional
+    public SignUpResponseDto resign(Integer id, String role){
+        if (!"Child".equals(role)) {
+            throw new RuntimeException("사용자의 역할이 Child가 아닙니다.");
+        }
+
+        Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("DB에 사용자가 없습니다."));
+
+        List<ChatRoom> chatRooms = child.getChatRoomList();
+        List<ChatMessage> allMessages = chatRooms.stream()
+                .flatMap(chatRoom -> chatRoom.getMessageList().stream())
+                .collect(Collectors.toList());
+
+        // 배치 삭제로 메시지와 채팅방 모두 삭제
+        chatMessageRepository.deleteAll(allMessages);
+        chatRoomRepository.deleteAll(chatRooms);
+
+        // Child 객체의 정보를 업데이트
+        child.setBirthDate(null);
+        child.setEmail(null);
+        child.setPushStatus(null);
+        child.setPushNotificationTime(null);
+        child.setPassword(null);
+        child.setFcmToken(null);
+        childRepository.save(child);
+
+        return SignUpResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("탈퇴 완료")
+                .build();
+    }
+
 
 }

@@ -60,6 +60,13 @@ public class SignController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @DeleteMapping("/resign") // 자식 탈퇴
+    public ResponseEntity<SignUpResponseDto> resign(){
+        Integer id = getCurrentMemberId();
+        String role = getCurrentMemberRole();
+        SignUpResponseDto responseDto = signService.resign(id, role);
+        return ResponseEntity.ok(responseDto);
+    }
 
 
 
