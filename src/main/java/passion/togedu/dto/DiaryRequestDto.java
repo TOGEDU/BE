@@ -18,6 +18,7 @@ public class DiaryRequestDto {
     private String text;
     private String imgUrl;
 
+    //Dto 추가
     public static DiaryRequestDto fromEntity(Diary diary) {
         return DiaryRequestDto.builder()
                 .parentChildId(diary.getParentChild().getId())
