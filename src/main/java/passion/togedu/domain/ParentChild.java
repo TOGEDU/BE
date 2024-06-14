@@ -34,4 +34,5 @@ public class ParentChild {
     @OneToMany(mappedBy = "parentChild")
     @JsonManagedReference
     private List<Diary> diaries;
+
 }
