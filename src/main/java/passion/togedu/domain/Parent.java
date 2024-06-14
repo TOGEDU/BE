@@ -39,6 +39,9 @@ public class Parent {
     @Column(length = 50)
     private String parentCode;
 
+    @Column(length=200)
+    private String fcmToken;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private List<VoiceRecordingRecord> voiceRecordingRecordList;
 
