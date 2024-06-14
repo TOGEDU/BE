@@ -42,6 +42,7 @@ dependencies {
 
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.13.3'
 
+
 }
 
 tasks.named('test') {
