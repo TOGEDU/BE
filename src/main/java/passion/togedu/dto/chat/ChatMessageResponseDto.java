@@ -1,4 +1,4 @@
-package passion.togedu.dto;
+package passion.togedu.dto.chat;
 
 import lombok.Getter;
 import passion.togedu.domain.ChatMessage;

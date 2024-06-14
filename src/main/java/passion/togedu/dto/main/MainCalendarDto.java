@@ -1,4 +1,4 @@
-package passion.togedu.dto;
+package passion.togedu.dto.main;
 
 
 import lombok.*;
