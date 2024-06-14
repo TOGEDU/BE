@@ -1,12 +1,10 @@
 package passion.togedu.service;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.DailyQuestion;
-import passion.togedu.dto.MainCalendarDto;
-import passion.togedu.dto.MainStatDto;
+import passion.togedu.dto.main.MainCalendarDto;
+import passion.togedu.dto.main.MainStatDto;
 import passion.togedu.repository.*;
 
 import java.time.LocalDate;
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
