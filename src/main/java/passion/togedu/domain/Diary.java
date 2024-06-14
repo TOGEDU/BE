@@ -33,4 +33,5 @@ public class Diary {
 
     @Column(name = "img_url", length = 500)
     private String imgUrl;
+
 }

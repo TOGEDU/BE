@@ -1,10 +1,8 @@
 package passion.togedu.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -12,28 +10,29 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Message {
-
+public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(length = 200)
-    private String sender;
 
     @CreatedDate
     private LocalDateTime time;
 
     @Column(length = 500)
-    private String content;
+    private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatroom_id")
+    @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    @Builder
+    public ChatMessage(Integer id, String message, ChatRoom chatRoom) {
+        this.id = id;
+        this.message = message;
+        this.chatRoom = chatRoom;
+    }
 }
 

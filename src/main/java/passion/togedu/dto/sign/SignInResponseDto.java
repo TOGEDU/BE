@@ -1,4 +1,4 @@
-package passion.togedu.dto;
+package passion.togedu.dto.sign;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignUpResponseDto {
-    // 회원 가입 완료 후 보내는 dto
+public class SignInResponseDto {
+    // 로그인 시 사용되는 dto
     private Boolean success;
     private String msg;
+    private String role;
+    private String grantType;
+    private String token;
 }

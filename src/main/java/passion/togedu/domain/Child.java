@@ -43,6 +43,9 @@ public class Child {
     @Column(length = 500)
     private String generatedChatbotPath;
 
+    @Column(length=200)
+    private String fcmToken; // FCM 토큰 필드
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "child")
     private List<ChatRoom> chatRoomList;
 
