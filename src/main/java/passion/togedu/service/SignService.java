@@ -166,6 +166,17 @@ public class SignService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
+        // 4. fcm token 저장
+        if (tokenDto.getRole().equals("Parent")){
+            Parent parent = parentRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+            parent.setFcmToken(requestDto.getFcmToken());
+            parentRepository.save(parent);
+        } else if (tokenDto.getRole().equals("Child")) {
+            Child child = childRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+            child.setFcmToken(requestDto.getFcmToken());
+            childRepository.save(child);
+        }
+
         // 5. 토큰 발급
         return SignInResponseDto.builder()
                 .success(Boolean.TRUE)

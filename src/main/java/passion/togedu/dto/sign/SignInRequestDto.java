@@ -13,4 +13,5 @@ public class SignInRequestDto {
     // 로그인 시 사용되는 dto
     private String email;
     private String password;
+    private String fcmToken;
 }
