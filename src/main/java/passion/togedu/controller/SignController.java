@@ -23,8 +23,8 @@ public class SignController {
     }
 
     @GetMapping("/emailduplicationcheck") // 부모, 자식 회원가입 - 이메일 중복 검사
-    public ResponseEntity<SignUpResponseDto> checkEmailDuplicate(@RequestParam("email") String email){
-        SignUpResponseDto responseDto = signService.checkEmailDuplicate(email);
+    public ResponseEntity<EmailCheckResponseDto> checkEmailDuplicate(@RequestParam("id") Integer id, @RequestParam("email") String email){
+        EmailCheckResponseDto responseDto = signService.checkEmailDuplicate(id, email);
         return ResponseEntity.ok(responseDto);
     }
 

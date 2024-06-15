@@ -188,15 +188,17 @@ public class SignService {
     }
 
     @Transactional
-    public SignUpResponseDto checkEmailDuplicate(String email){
+    public EmailCheckResponseDto checkEmailDuplicate(Integer id, String email){
         if (parentRepository.existsByEmail(email) || childRepository.existsByEmail(email)){
-            return SignUpResponseDto.builder()
+            return EmailCheckResponseDto.builder()
                     .success(Boolean.FALSE)
+                    .id(id)
                     .msg("이미 가입된 이메일입니다.")
                     .build();
         }else{
-            return SignUpResponseDto.builder()
+            return EmailCheckResponseDto.builder()
                     .success(Boolean.TRUE)
+                    .id(id)
                     .msg("이메일 중복 검사 통과")
                     .build();
         }
