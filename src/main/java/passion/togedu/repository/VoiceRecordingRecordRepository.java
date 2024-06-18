@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import passion.togedu.domain.VoiceRecordingRecord;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Repository
 public interface VoiceRecordingRecordRepository extends JpaRepository<VoiceRecordingRecord, Integer> {
     //userid에 따라 녹음 기록 데이터 개수 조회
@@ -17,4 +19,5 @@ public interface VoiceRecordingRecordRepository extends JpaRepository<VoiceRecor
     @Query("SELECT COUNT(vrr) > 0 FROM VoiceRecordingRecord vrr WHERE vrr.parent.id = :parentId AND DATE(vrr.date) = :date")
     boolean existsByParentIdAndDate(@Param("parentId") Integer parentId, @Param("date") LocalDate date);
 
+    List<VoiceRecordingRecord> findByParentId(Integer parentId);
 }
