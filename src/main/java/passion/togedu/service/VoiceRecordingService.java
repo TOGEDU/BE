@@ -2,6 +2,8 @@ package passion.togedu.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Parent;
 import passion.togedu.domain.VoiceRecordingRecord;
 import passion.togedu.domain.VoiceRecordingSentence;
@@ -10,6 +12,7 @@ import passion.togedu.dto.VoiceRecordingSentenceDto;
 import passion.togedu.repository.VoiceRecordingRecordRepository;
 import passion.togedu.repository.VoiceRecordingSentenceRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,13 +25,22 @@ public class VoiceRecordingService {
     @Autowired
     private VoiceRecordingSentenceRepository voiceRecordingSentenceRepository;
 
-    public VoiceRecordingRecordDto addRecording(VoiceRecordingRecordDto recordingDTO) {
+    @Autowired
+    private S3UploadService s3UploadService;
+
+    @Transactional
+    public VoiceRecordingRecordDto addRecording(VoiceRecordingRecordDto recordingDTO, MultipartFile multipartFile) throws IOException {
+        // Save file to S3 and get the URL
+        String recordingUrl = s3UploadService.saveFile(multipartFile);
+
+        // Create VoiceRecordingRecord entity
         VoiceRecordingRecord recording = VoiceRecordingRecord.builder()
-                .recordingUrl(recordingDTO.getRecordingUrl())
+                .recordingUrl(recordingUrl)
                 .parent(Parent.builder().id(recordingDTO.getParentId()).build())
                 .voiceRecordingSentence(VoiceRecordingSentence.builder().id(recordingDTO.getSentenceId()).build())
                 .build();
 
+        // Save VoiceRecordingRecord entity to database
         VoiceRecordingRecord savedRecording = voiceRecordingRecordRepository.save(recording);
 
         return convertToDto(savedRecording);
