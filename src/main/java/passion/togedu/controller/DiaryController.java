@@ -3,10 +3,12 @@ package passion.togedu.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
 import passion.togedu.dto.DiaryRequestDto;
 import passion.togedu.service.DiaryService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,14 +27,17 @@ public class DiaryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> createDiary(@RequestBody DiaryRequestDto diaryRequestDto) {
-        diaryService.createDiary(diaryRequestDto);
+    public ResponseEntity<String> createDiary(@RequestPart("diaryRequestDto") DiaryRequestDto diaryRequestDto,
+                                              @RequestPart("file") MultipartFile file) throws IOException {
+        diaryService.createDiary(diaryRequestDto, file);
         return ResponseEntity.ok("육아일기가 기록되었습니다.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiaryRequestDto> updateDiary(@PathVariable int id, @RequestBody DiaryRequestDto diaryRequestDto) {
-        DiaryRequestDto updatedDiaryDto = diaryService.updateDiary(id, diaryRequestDto);
+    public ResponseEntity<DiaryRequestDto> updateDiary(@PathVariable int id,
+                                                       @RequestPart("diaryRequestDto") DiaryRequestDto diaryRequestDto,
+                                                       @RequestPart("file") MultipartFile file) throws IOException {
+        DiaryRequestDto updatedDiaryDto = diaryService.updateDiary(id, diaryRequestDto, file);
         return ResponseEntity.ok(updatedDiaryDto);
     }
 

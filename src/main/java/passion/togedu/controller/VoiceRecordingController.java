@@ -3,10 +3,12 @@ package passion.togedu.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.dto.VoiceRecordingRecordDto;
 import passion.togedu.dto.VoiceRecordingSentenceDto;
 import passion.togedu.service.VoiceRecordingService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/tts")
@@ -22,9 +24,11 @@ public class VoiceRecordingController {
         return ResponseEntity.ok(sentences);
     }
 
-    @PostMapping
-    public ResponseEntity<VoiceRecordingRecordDto> addRecording(@RequestBody VoiceRecordingRecordDto recordingDTO) {
-        VoiceRecordingRecordDto savedRecording = voiceRecordingService.addRecording(recordingDTO);
+    @PostMapping("/record")
+    public ResponseEntity<VoiceRecordingRecordDto> addRecording(
+            @RequestPart("recordingDTO") VoiceRecordingRecordDto recordingDTO,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        VoiceRecordingRecordDto savedRecording = voiceRecordingService.addRecording(recordingDTO, file);
         return ResponseEntity.ok(savedRecording);
     }
 
