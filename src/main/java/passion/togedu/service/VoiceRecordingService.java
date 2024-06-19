@@ -7,8 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Parent;
 import passion.togedu.domain.VoiceRecordingRecord;
 import passion.togedu.domain.VoiceRecordingSentence;
-import passion.togedu.dto.VoiceRecordingRecordDto;
-import passion.togedu.dto.VoiceRecordingSentenceDto;
+import passion.togedu.dto.voiceRecording.VoiceRecordingRecordDto;
+import passion.togedu.dto.voiceRecording.VoiceRecordingSentenceDto;
 import passion.togedu.repository.VoiceRecordingRecordRepository;
 import passion.togedu.repository.VoiceRecordingSentenceRepository;
 

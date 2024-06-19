@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
 import passion.togedu.domain.ParentChild;
-import passion.togedu.dto.DiaryRequestDto;
+import passion.togedu.dto.diary.DiaryRequestDto;
 import passion.togedu.repository.DiaryRepository;
 import passion.togedu.repository.ParentChildRepository;
 
