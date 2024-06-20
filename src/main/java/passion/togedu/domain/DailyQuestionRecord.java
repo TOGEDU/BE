@@ -32,7 +32,7 @@ public class DailyQuestionRecord {
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private DailyQuestion dailyQuestion;
 
