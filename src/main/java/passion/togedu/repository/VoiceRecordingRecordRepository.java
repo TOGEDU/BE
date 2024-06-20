@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import passion.togedu.domain.Parent;
 import passion.togedu.domain.VoiceRecordingRecord;
+import passion.togedu.domain.VoiceRecordingSentence;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +20,8 @@ public interface VoiceRecordingRecordRepository extends JpaRepository<VoiceRecor
     //해당 날짜에 음성기록이 있는지 여부 확인
     @Query("SELECT COUNT(vrr) > 0 FROM VoiceRecordingRecord vrr WHERE vrr.parent.id = :parentId AND DATE(vrr.date) = :date")
     boolean existsByParentIdAndDate(@Param("parentId") Integer parentId, @Param("date") LocalDate date);
+
+    boolean existsByParentAndVoiceRecordingSentence(Parent parent, VoiceRecordingSentence voiceRecordingSentence);
 
     List<VoiceRecordingRecord> findByParentId(Integer parentId);
 }
