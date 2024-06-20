@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import passion.togedu.dto.VoiceRecordingRecordDto;
-import passion.togedu.dto.VoiceRecordingSentenceDto;
+import passion.togedu.dto.voiceRecording.VoiceRecordingRecordDto;
+import passion.togedu.dto.voiceRecording.VoiceRecordingSentenceDto;
 import passion.togedu.service.VoiceRecordingService;
 
 import java.io.IOException;

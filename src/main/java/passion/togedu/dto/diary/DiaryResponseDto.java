@@ -1,4 +1,4 @@
-package passion.togedu.dto;
+package passion.togedu.dto.diary;
 
 import lombok.*;
 import passion.togedu.domain.Diary;

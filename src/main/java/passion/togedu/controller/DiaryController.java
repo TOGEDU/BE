@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
-import passion.togedu.dto.DiaryRequestDto;
+import passion.togedu.dto.diary.DiaryRequestDto;
 import passion.togedu.service.DiaryService;
 
 import java.io.IOException;
