@@ -22,7 +22,7 @@ public class DailyQuestion {
     @Column(length = 500)
     private String questionText;
 
-    @OneToMany(mappedBy = "dailyQuestion", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dailyQuestion", cascade = CascadeType.ALL)
     private List<DailyQuestionRecord> dailyQuestionRecord;
 
 }
