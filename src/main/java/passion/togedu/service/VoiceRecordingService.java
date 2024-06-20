@@ -9,6 +9,7 @@ import passion.togedu.domain.VoiceRecordingRecord;
 import passion.togedu.domain.VoiceRecordingSentence;
 import passion.togedu.dto.voiceRecording.VoiceRecordingRecordDto;
 import passion.togedu.dto.voiceRecording.VoiceRecordingSentenceDto;
+import passion.togedu.repository.ParentRepository;
 import passion.togedu.repository.VoiceRecordingRecordRepository;
 import passion.togedu.repository.VoiceRecordingSentenceRepository;
 
@@ -28,8 +29,20 @@ public class VoiceRecordingService {
     @Autowired
     private S3UploadService s3UploadService;
 
+    @Autowired
+    private ParentRepository parentRepository;
+
+
     @Transactional
     public VoiceRecordingRecordDto addRecording(VoiceRecordingRecordDto recordingDTO, MultipartFile multipartFile) throws IOException {
+
+        Parent parent = parentRepository.findById(recordingDTO.getParentId()).orElseThrow();
+        VoiceRecordingSentence voiceRecordingSentence = voiceRecordingSentenceRepository.findById(recordingDTO.getSentenceId()).orElseThrow();
+
+        if (voiceRecordingRecordRepository.existsByParentAndVoiceRecordingSentence(parent, voiceRecordingSentence)){
+            throw new RuntimeException("이미 존재하는 녹음입니다.");
+        }
+
         // Save file to S3 and get the URL
         String recordingUrl = s3UploadService.saveFile(multipartFile);
 
