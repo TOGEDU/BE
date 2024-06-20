@@ -24,21 +24,27 @@ public class DailyQuestionService {
     private final ParentRepository parentRepository;
 
     public void addDailyQuestionRecord(Integer userId, DailyQuestionRequestDto dailyQuestionRequestDto) {
-        Parent parent = parentRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        boolean exists = dailyQuestionRecordRepository.existsByParentIdAndDailyQuestion_Id(userId,dailyQuestionRequestDto.getQuestionId());
+        if (!exists){
+            Parent parent = parentRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        // 질문 조회
-        DailyQuestion dailyQuestion = dailyQuestionRepository.findById(dailyQuestionRequestDto.getQuestionId())
-                .orElseThrow(() -> new RuntimeException("질문을 찾을 수 없습니다."));
+            // 질문 조회
+            DailyQuestion dailyQuestion = dailyQuestionRepository.findById(dailyQuestionRequestDto.getQuestionId())
+                    .orElseThrow(() -> new RuntimeException("질문을 찾을 수 없습니다."));
 
-        // 새로운 질문 기록 생성
-        DailyQuestionRecord dailyQuestionRecord = DailyQuestionRecord.builder()
-                .parent(parent)
-                .dailyQuestion(dailyQuestion)
-                .text(dailyQuestionRequestDto.getText())
-                .date(LocalDateTime.now())
-                .build();
-        dailyQuestionRecordRepository.save(dailyQuestionRecord);
+            // 새로운 질문 기록 생성
+            DailyQuestionRecord dailyQuestionRecord = DailyQuestionRecord.builder()
+                    .parent(parent)
+                    .dailyQuestion(dailyQuestion)
+                    .text(dailyQuestionRequestDto.getText())
+                    .date(LocalDateTime.now())
+                    .build();
+            dailyQuestionRecordRepository.save(dailyQuestionRecord);}
+        else {
+            throw new RuntimeException("이미 질문의 답변이 존재합니다.");
+        }
+
     }
 
     public List<DailyQuestionResponseDto> getDailyQuestionListDto(Integer userId) {
