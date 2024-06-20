@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Builder
@@ -20,7 +22,7 @@ public class DailyQuestion {
     @Column(length = 500)
     private String questionText;
 
-    @OneToOne(mappedBy = "dailyQuestion", cascade = CascadeType.ALL)
-    private DailyQuestionRecord dailyQuestionRecord;
+    @OneToMany(mappedBy = "dailyQuestion", cascade = CascadeType.ALL)
+    private List<DailyQuestionRecord> dailyQuestionRecord;
 
 }
