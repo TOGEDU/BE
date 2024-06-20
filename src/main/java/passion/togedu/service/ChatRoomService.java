@@ -3,7 +3,7 @@ package passion.togedu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.ChatRoom;
-import passion.togedu.dto.ChatRoomDto;
+import passion.togedu.dto.chat.ChatRoomDto;
 import passion.togedu.repository.ChatRoomRepository;
 
 import java.util.List;

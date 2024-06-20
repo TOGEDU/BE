@@ -1,9 +1,9 @@
 package passion.togedu.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,7 +32,7 @@ public class ParentChild {
     private String uniqueCode;
 
     @OneToMany(mappedBy = "parentChild")
+    @JsonManagedReference
     private List<Diary> diaries;
 
 }
-

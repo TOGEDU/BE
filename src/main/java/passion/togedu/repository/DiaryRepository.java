@@ -5,12 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import passion.togedu.domain.Diary;
-
+import passion.togedu.domain.ParentChild;
+import java.util.List;
 import java.time.LocalDate;
-
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Integer> {
+    List<Diary> findByDate(LocalDate date);
+    List<Diary> findByParentChildAndDate(ParentChild parentChild, LocalDate date);
 
     // parentChild의 parent를 기준으로 작성된 일기의 날짜 개수를 조회
     @Query("SELECT COUNT(DATE(d.date)) FROM Diary d WHERE d.parentChild.parent.id = :userId")
