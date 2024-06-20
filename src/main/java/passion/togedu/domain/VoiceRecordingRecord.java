@@ -31,7 +31,7 @@ public class VoiceRecordingRecord {
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sentence_id", referencedColumnName = "id")
     private VoiceRecordingSentence voiceRecordingSentence;
 

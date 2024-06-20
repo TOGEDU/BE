@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Builder
@@ -20,7 +22,7 @@ public class VoiceRecordingSentence {
     @Column(length = 500)
     private String sentenceText;
 
-    @OneToOne(mappedBy = "voiceRecordingSentence", cascade = CascadeType.ALL)
-    private VoiceRecordingRecord voiceRecordingRecord;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "voiceRecordingSentence", cascade = CascadeType.ALL)
+    private List<VoiceRecordingRecord> voiceRecordingRecordList;
 
 }
