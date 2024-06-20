@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import passion.togedu.domain.Parent;
 import passion.togedu.repository.ParentRepository;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,12 @@ public class ParentService {
             Hibernate.initialize(p.getParentChildList());
         });
         return parentRepository.findById(id);
+    }
+
+    public List<Parent> findParentsWithCurrentPushTimeAndStatus() {
+        LocalTime now = LocalTime.now().withSecond(0).withNano(0); // 초와 나노초 제거
+        String formattedTime = now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        return parentRepository.findParentsWithCurrentPushTimeAndStatus(formattedTime);
     }
 
 }

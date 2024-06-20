@@ -7,19 +7,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import passion.togedu.domain.Child;
-import passion.togedu.domain.Parent;
-import passion.togedu.domain.ParentChild;
+import passion.togedu.domain.*;
 import passion.togedu.dto.sign.*;
 import passion.togedu.jwt.TokenProvider;
-import passion.togedu.repository.ChildRepository;
-import passion.togedu.repository.ParentChildRepository;
-import passion.togedu.repository.ParentRepository;
+import passion.togedu.repository.*;
 
 import java.security.SecureRandom;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,8 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final TokenProvider tokenProvider;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     // 부모 회원 가입 - 본인 인증
     @Transactional
@@ -154,7 +154,7 @@ public class SignService {
                 .build();
     }
 
-    @Transactional // 로그인 시도한 ID / PW String
+    @Transactional // 로그인 시도한 ID / PW String -- 로그인 할 때 fcm 토큰을 객체에 저장해 줘야 함.
     public SignInResponseDto signIn(SignInRequestDto requestDto){
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
@@ -166,6 +166,17 @@ public class SignService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
+        // 4. fcm token 저장
+        if (tokenDto.getRole().equals("Parent")){
+            Parent parent = parentRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+            parent.setFcmToken(requestDto.getFcmToken());
+            parentRepository.save(parent);
+        } else if (tokenDto.getRole().equals("Child")) {
+            Child child = childRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+            child.setFcmToken(requestDto.getFcmToken());
+            childRepository.save(child);
+        }
+
         // 5. 토큰 발급
         return SignInResponseDto.builder()
                 .success(Boolean.TRUE)
@@ -175,5 +186,74 @@ public class SignService {
                 .token(tokenDto.getAccessToken())
                 .build();
     }
+
+    @Transactional
+    public EmailCheckResponseDto checkEmailDuplicate(Integer id, String email){
+        if (parentRepository.existsByEmail(email) || childRepository.existsByEmail(email)){
+            return EmailCheckResponseDto.builder()
+                    .success(Boolean.FALSE)
+                    .id(id)
+                    .msg("이미 가입된 이메일입니다.")
+                    .build();
+        }else{
+            return EmailCheckResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .id(id)
+                    .msg("이메일 중복 검사 통과")
+                    .build();
+        }
+    }
+
+    @Transactional
+    public SignUpResponseDto logout(Integer id, String role){
+        if (role.equals("Parent")){
+            Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+            parent.setFcmToken(null);
+            parentRepository.save(parent);
+        } else if (role.equals("Child")) {
+            Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+            child.setFcmToken(null);
+            childRepository.save(child);
+        }else{
+            throw new RuntimeException("역할이 잘못된 사용자입니다.");
+        }
+        return SignUpResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("로그아웃 완료")
+                .build();
+    }
+
+    @Transactional
+    public SignUpResponseDto resign(Integer id, String role){
+        if (!"Child".equals(role)) {
+            throw new RuntimeException("사용자의 역할이 Child가 아닙니다.");
+        }
+
+        Child child = childRepository.findById(id).orElseThrow(() -> new RuntimeException("DB에 사용자가 없습니다."));
+
+        List<ChatRoom> chatRooms = child.getChatRoomList();
+        List<ChatMessage> allMessages = chatRooms.stream()
+                .flatMap(chatRoom -> chatRoom.getMessageList().stream())
+                .collect(Collectors.toList());
+
+        // 배치 삭제로 메시지와 채팅방 모두 삭제
+        chatMessageRepository.deleteAll(allMessages);
+        chatRoomRepository.deleteAll(chatRooms);
+
+        // Child 객체의 정보를 업데이트
+        child.setBirthDate(null);
+        child.setEmail(null);
+        child.setPushStatus(null);
+        child.setPushNotificationTime(null);
+        child.setPassword(null);
+        child.setFcmToken(null);
+        childRepository.save(child);
+
+        return SignUpResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("탈퇴 완료")
+                .build();
+    }
+
 
 }
