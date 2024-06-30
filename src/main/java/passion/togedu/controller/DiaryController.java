@@ -34,17 +34,17 @@ public class DiaryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiaryRequestDto> updateDiary(@PathVariable int id,
-                                                       @RequestPart("diaryRequestDto") DiaryRequestDto diaryRequestDto,
-                                                       @RequestPart("file") MultipartFile file) throws IOException {
-        DiaryRequestDto updatedDiaryDto = diaryService.updateDiary(id, diaryRequestDto, file);
-        return ResponseEntity.ok(updatedDiaryDto);
+    public ResponseEntity<String> updateDiary(@PathVariable int id,
+                                              @RequestPart("diaryRequestDto") DiaryRequestDto diaryRequestDto,
+                                              @RequestPart("file") MultipartFile file) throws IOException {
+        diaryService.updateDiary(id, diaryRequestDto, file);
+        return ResponseEntity.ok("육아일기가 수정되었습니다.");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDiary(@PathVariable int id) {
+    public ResponseEntity<String> deleteDiary(@PathVariable int id) {
         diaryService.deleteDiary(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("육아일기가 삭제되었습니다.");
     }
 
     public static class Response {
