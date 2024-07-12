@@ -13,6 +13,7 @@ import passion.togedu.repository.ParentChildRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -64,5 +65,11 @@ public class DiaryService {
 
     public void deleteDiary(int id) {
         diaryRepository.deleteById(id);
+    }
+    public List<String> getAllDiaryImageUrls() {
+        return diaryRepository.findAll().stream()
+                .map(Diary::getImgUrl)
+                .filter(url -> url != null && !url.isEmpty())
+                .collect(Collectors.toList());
     }
 }
