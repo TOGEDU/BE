@@ -14,8 +14,12 @@ import passion.togedu.repository.VoiceRecordingRecordRepository;
 import passion.togedu.repository.VoiceRecordingSentenceRepository;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDate.*;
 
 @Service
 public class VoiceRecordingService {
@@ -32,7 +36,6 @@ public class VoiceRecordingService {
     @Autowired
     private ParentRepository parentRepository;
 
-
     @Transactional
     public VoiceRecordingRecordDto addRecording(VoiceRecordingRecordDto recordingDTO, MultipartFile multipartFile) throws IOException {
 
@@ -43,26 +46,18 @@ public class VoiceRecordingService {
             throw new RuntimeException("이미 존재하는 녹음입니다.");
         }
 
-        // Save file to S3 and get the URL
         String recordingUrl = s3UploadService.saveFile(multipartFile);
 
-        // Create VoiceRecordingRecord entity
         VoiceRecordingRecord recording = VoiceRecordingRecord.builder()
                 .recordingUrl(recordingUrl)
-                .parent(Parent.builder().id(recordingDTO.getParentId()).build())
-                .voiceRecordingSentence(VoiceRecordingSentence.builder().id(recordingDTO.getSentenceId()).build())
+                .parent(parent)
+                .voiceRecordingSentence(voiceRecordingSentence)
+                .date(LocalDateTime.from(now()))  //현재 날짜설정
                 .build();
 
-        // Save VoiceRecordingRecord entity to database
         VoiceRecordingRecord savedRecording = voiceRecordingRecordRepository.save(recording);
 
         return convertToDto(savedRecording);
-    }
-
-    public List<VoiceRecordingRecordDto> getAllRecordings() {
-        return voiceRecordingRecordRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
     }
 
     public List<VoiceRecordingRecordDto> getRecordingsByParentId(Integer parentId) {
@@ -71,22 +66,15 @@ public class VoiceRecordingService {
                 .collect(Collectors.toList());
     }
 
-    public VoiceRecordingRecordDto getRecordingById(Integer id) {
-        return voiceRecordingRecordRepository.findById(id)
-                .map(this::convertToDto)
-                .orElse(null);
+    public boolean hasRecordingOnDate(Integer parentId, String date) {
+        LocalDate localDate = parse(date);
+        return voiceRecordingRecordRepository.existsByParentIdAndDate(parentId, localDate);
     }
 
     public List<VoiceRecordingSentenceDto> getAllSentences() {
         return voiceRecordingSentenceRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-    }
-
-    public VoiceRecordingSentenceDto getSentenceById(Integer id) {
-        return voiceRecordingSentenceRepository.findById(id)
-                .map(this::convertToDto)
-                .orElse(null);
     }
 
     private VoiceRecordingRecordDto convertToDto(VoiceRecordingRecord recording) {
