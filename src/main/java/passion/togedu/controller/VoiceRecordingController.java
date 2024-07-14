@@ -32,15 +32,17 @@ public class VoiceRecordingController {
         return ResponseEntity.ok(savedRecording);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<VoiceRecordingRecordDto>> getAllRecordings() {
-        List<VoiceRecordingRecordDto> recordings = voiceRecordingService.getAllRecordings();
+    @GetMapping("/records")
+    public ResponseEntity<List<VoiceRecordingRecordDto>> getRecordingsByParentId(@RequestParam Integer parentId) {
+        List<VoiceRecordingRecordDto> recordings = voiceRecordingService.getRecordingsByParentId(parentId);
         return ResponseEntity.ok(recordings);
     }
 
-    @GetMapping("/record")
-    public ResponseEntity<VoiceRecordingRecordDto> getRecordingById(@RequestParam Integer id) {
-        VoiceRecordingRecordDto recording = voiceRecordingService.getRecordingById(id);
-        return ResponseEntity.ok(recording);
+    @GetMapping("/records/date")
+    public ResponseEntity<Boolean> hasRecordingOnDate(
+            @RequestParam Integer parentId,
+            @RequestParam String date) { // "yyyy-MM-dd" 형식의 날짜
+        boolean hasRecording = voiceRecordingService.hasRecordingOnDate(parentId, date);
+        return ResponseEntity.ok(hasRecording);
     }
 }
