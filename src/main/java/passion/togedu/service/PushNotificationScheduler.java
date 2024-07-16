@@ -47,4 +47,24 @@ public class PushNotificationScheduler {
 
     }
 
+    @Scheduled(cron = "0 0 9 * * *") // 자녀의 생일 오전 9시에 푸시 알림 발송
+    public void sendBirthdayNotifications(){
+
+        // 생일인 자녀를 찾아옴.
+        List<Child> childList = childService.findChildrenWithBirthdayToday();
+
+        for (Child child: childList){
+            FCMNotificationRequestDto requestDto = FCMNotificationRequestDto.builder()
+                    .firebaseToken(child.getFcmToken())
+                    .title("생일을 축하합니다 :)")
+                    .body("생일을 맞아 부모님께 채팅해보세요.")
+                    .image("https://togedubucket.s3.ap-northeast-2.amazonaws.com/Rectangle+897.svg")
+                    .build();
+            fcmNotificationService.sendNotificationByToken(requestDto);
+        }
+
+    }
+
+
+
 }

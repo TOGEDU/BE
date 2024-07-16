@@ -15,4 +15,7 @@ public interface ChildRepository extends JpaRepository<Child, Integer> {
     @Query("SELECT u FROM Child u WHERE FUNCTION('TIME_FORMAT', u.pushNotificationTime, '%H:%i') = :currentTime AND u.pushStatus = true AND u.fcmToken IS NOT NULL")
     List<Child> findChildrenWithCurrentPushTimeAndStatus(@Param("currentTime") String currentTime);
 
+    @Query("SELECT u FROM Child u WHERE MONTH(u.birthDate) = MONTH(CURRENT_DATE) AND DAY(u.birthDate) = DAY(CURRENT_DATE)")
+    List<Child> findChildrenWithBirthdayToday();
+
 }
