@@ -59,7 +59,6 @@ public class MainStatService {
         return mainStatDto;
     }
     //DailyQuestion 찾기
-    //여러 방법이 존재하는데.. 다른 방법으로 추후 변경 예정.
     private String findMissingDailyQuestion(Integer userId) {
         // DailyQuestion의 데이터 개수 가져오기
         int totalQuestions = dailyQuestionRepository.findAll().size();
