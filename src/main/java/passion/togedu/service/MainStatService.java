@@ -3,7 +3,6 @@ package passion.togedu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.DailyQuestion;
-import passion.togedu.dto.main.MainCalendarDto;
 import passion.togedu.dto.main.MainStatDto;
 import passion.togedu.repository.*;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MainStatService {
-
+/*
     private final DailyQuestionRecordRepository dailyQuestionRecordRepository;
     private final DailyQuestionRepository dailyQuestionRepository;
     private final VoiceRecordingRecordRepository voiceRecordingRecordRepository;
@@ -144,5 +143,5 @@ public class MainStatService {
         }
 
         return calendar;
-    }
+    }*/
 }
