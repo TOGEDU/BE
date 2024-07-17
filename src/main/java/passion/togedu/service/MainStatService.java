@@ -3,7 +3,6 @@ package passion.togedu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.DailyQuestion;
-import passion.togedu.dto.main.MainCalendarDto;
 import passion.togedu.dto.main.MainStatDto;
 import passion.togedu.repository.*;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MainStatService {
-
+/*
     private final DailyQuestionRecordRepository dailyQuestionRecordRepository;
     private final DailyQuestionRepository dailyQuestionRepository;
     private final VoiceRecordingRecordRepository voiceRecordingRecordRepository;
@@ -59,7 +58,6 @@ public class MainStatService {
         return mainStatDto;
     }
     //DailyQuestion 찾기
-    //여러 방법이 존재하는데.. 다른 방법으로 추후 변경 예정.
     private String findMissingDailyQuestion(Integer userId) {
         // DailyQuestion의 데이터 개수 가져오기
         int totalQuestions = dailyQuestionRepository.findAll().size();
@@ -145,5 +143,5 @@ public class MainStatService {
         }
 
         return calendar;
-    }
+    }*/
 }

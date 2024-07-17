@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Builder
+/*@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,4 +17,4 @@ public class MainCalendarDto {
     private boolean diary;
     private boolean dailyQuestion;
     private boolean record;
-}
+}*/

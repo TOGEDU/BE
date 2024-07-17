@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import passion.togedu.dto.main.MainCalendarDto;
 import passion.togedu.dto.main.MainStatDto;
 import passion.togedu.service.MainStatService;
 
@@ -18,7 +17,7 @@ import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 @RequiredArgsConstructor
 @RequestMapping("/api/home")
 public class MainStatController {
-    private final MainStatService mainStatService;
+    /*private final MainStatService mainStatService;
     //진행현황표, 오늘의 질문 조회
     @GetMapping
     public MainStatDto getHomeStats() {
@@ -31,7 +30,7 @@ public class MainStatController {
     public List<MainCalendarDto> getCalendar(@RequestParam int year, @RequestParam int month){
         Integer userId = getCurrentMemberId();
         return mainStatService.getMainCalendarDto(userId, year, month);
-    }
+    }*/
 
 }
 
