@@ -32,8 +32,6 @@ public class StatStatusService {
             StatStatusDto statStatusDto = StatStatusDto.builder()
                     .date(date)
                     .badge(badge)
-                    .diary(hasDiary)
-                    .dailyQuestion(hasDailyQuestion)
                     .build();
             weekCalendar.add(statStatusDto);
         }

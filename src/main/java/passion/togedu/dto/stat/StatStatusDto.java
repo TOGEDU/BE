@@ -14,7 +14,5 @@ public class StatStatusDto {
     private LocalDate date;
     //뱃지의 유무
     private boolean badge;
-    private boolean diary;
-    private boolean dailyQuestion;
 
 }
