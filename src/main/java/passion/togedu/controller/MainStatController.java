@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import passion.togedu.dto.main.MainCalendarDto;
 import passion.togedu.dto.main.MainStatDto;
 import passion.togedu.service.MainStatService;
-
 import java.util.List;
-
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 
 @RestController

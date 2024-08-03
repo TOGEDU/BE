@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Image;
 import passion.togedu.repository.ImageRepository;
 import passion.togedu.service.S3UploadService;
-
 import java.io.IOException;
-
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberRole;
 

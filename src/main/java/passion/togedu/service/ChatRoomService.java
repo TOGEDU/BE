@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import passion.togedu.domain.ChatRoom;
 import passion.togedu.dto.chat.ChatRoomDto;
 import passion.togedu.repository.ChatRoomRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

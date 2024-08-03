@@ -2,7 +2,6 @@ package passion.togedu.dto.diary;
 
 import lombok.*;
 import passion.togedu.domain.Diary;
-
 import java.time.LocalDate;
 import java.util.List;
 

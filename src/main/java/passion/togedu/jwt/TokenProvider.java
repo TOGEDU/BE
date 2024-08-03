@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 import passion.togedu.dto.sign.TokenDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import passion.togedu.service.ChildService;
 import passion.togedu.service.ParentChildService;
-import passion.togedu.service.SignService;
-
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;

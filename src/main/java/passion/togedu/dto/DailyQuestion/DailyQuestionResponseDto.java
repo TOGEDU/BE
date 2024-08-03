@@ -1,9 +1,8 @@
 package passion.togedu.dto.DailyQuestion;
 
 import lombok.*;
-
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
