@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import passion.togedu.domain.Parent;
 import passion.togedu.repository.ParentRepository;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

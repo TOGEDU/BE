@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import passion.togedu.dto.sign.TokenDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import passion.togedu.service.ParentChildService;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,9 +30,12 @@ public class TokenProvider {
 
     private final Key key;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+    private final ParentChildService parentChildService;
+
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, ParentChildService parentChildService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.parentChildService = parentChildService;
     }
 
     public TokenDto generateTokenDto(Authentication authentication) {
@@ -45,12 +48,28 @@ public class TokenProvider {
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "5"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "role": "Parent"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 151621022 (ex)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
-                .compact();
+        String accessToken;
+        if (authorities.equals("Parent")){
+            // 부모일 경우
+            accessToken = Jwts.builder()
+                    .setSubject(authentication.getName())       // payload "sub": "5"
+                    .claim(AUTHORITIES_KEY, authorities)        // payload "role": "Parent"
+                    .setExpiration(accessTokenExpiresIn)        // payload "exp": 151621022 (ex)
+                    .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                    .compact();
+        } else if (authorities.equals("Child")) {
+            // 자식일 경우 payload에 parentId 추가
+            Integer parentId = parentChildService.getParentIdByChildId(Integer.valueOf(authentication.getName()));
+            accessToken = Jwts.builder()
+                    .setSubject(authentication.getName())       // payload "sub": "5"
+                    .claim(AUTHORITIES_KEY, authorities)        // payload "role": "Parent"
+                    .claim("parentId", parentId)             // payload "parentId" : 2
+                    .setExpiration(accessTokenExpiresIn)        // payload "exp": 151621022 (ex)
+                    .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                    .compact();
+        }else{
+            throw new RuntimeException("authorities가 잘못되었습니다.");
+        }
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()

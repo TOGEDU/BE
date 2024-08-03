@@ -1,6 +1,5 @@
 package passion.togedu.dto.sign;
 
-
 import lombok.*;
 
 @Data

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.stereotype.Controller;
 import passion.togedu.dto.chat.ChatRoomDto;
 import passion.togedu.service.ChatRoomService;
-
 import java.util.List;
 @Controller
 @RequiredArgsConstructor

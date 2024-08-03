@@ -1,8 +1,6 @@
 package passion.togedu.dto.sign;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Builder

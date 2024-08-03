@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import passion.togedu.service.DiaryService;
-
 import java.util.List;
 
 @RestController

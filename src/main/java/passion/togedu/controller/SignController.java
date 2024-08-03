@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import passion.togedu.dto.sign.*;
 import passion.togedu.service.SignService;
-
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberRole;
 

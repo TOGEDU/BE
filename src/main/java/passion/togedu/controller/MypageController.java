@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.service.MypageService;
-
 import java.io.IOException;
 import java.time.LocalTime;
-
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberRole;
 

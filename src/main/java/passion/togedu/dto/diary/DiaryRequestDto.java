@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import passion.togedu.domain.Diary;
-
 import java.time.LocalDate;
 
 @Data
