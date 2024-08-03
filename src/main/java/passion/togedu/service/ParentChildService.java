@@ -24,7 +24,7 @@ public class ParentChildService {
 
     public Integer getParentIdByChildId(Integer childId){
         Child child = childRepository.findById(childId).orElseThrow(() -> new RuntimeException("Child를 찾을 수 없습니다."));
-        ParentChild parentChild = parentChildRepository.findByChild(child).orElseThrow(() -> new RuntimeException("ParentChild를 찾을 수 없는습니다."));
+        ParentChild parentChild = parentChildRepository.findByChild(child).orElseThrow(() -> new RuntimeException("ParentChild를 찾을 수 없습니다."));
         return parentChild.getParent().getId();
     }
 
