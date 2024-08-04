@@ -37,9 +37,6 @@ public class Child {
     private String password;
 
     @Column(length = 500)
-    private String generatedTtsPath;
-
-    @Column(length = 500)
     private String generatedChatbotPath;
 
     @Column(length=200)
