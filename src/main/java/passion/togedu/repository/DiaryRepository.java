@@ -25,4 +25,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
     //해당 날짜에 일기 기록이 있는지 여부 확인
     @Query("SELECT COUNT(d) > 0 FROM Diary d WHERE d.parentChild.parent.id = :parentId AND DATE(d.date) = :date")
     boolean existsByParentIdAndDate(@Param("parentId") Integer parentId, @Param("date") LocalDate date);
+
+    List<Diary> findByParentChild(ParentChild parentChild);
+
 }
