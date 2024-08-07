@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import passion.togedu.dto.mypage.ChildIdAndName;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -16,4 +19,5 @@ public class SignInResponseDto {
     private String role;
     private String grantType;
     private String token;
+    private List<ChildIdAndName> childList;
 }

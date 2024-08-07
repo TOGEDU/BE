@@ -15,7 +15,7 @@ import java.util.List;
 public class StatStatusService {
     private final DailyQuestionRecordRepository dailyQuestionRecordRepository;
     private final DiaryRepository diaryRepository;
-    List<StatStatusDto> weekCalendar = new ArrayList<>();
+    List<StatStatusDto> weekCalendar = new ArrayList<>(); // 이게 여기에서 초기화되면 안 될 것 같은디
 
     public List<StatStatusDto> getStatStatusDto(Integer userId) {
         //오늘

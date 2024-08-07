@@ -8,11 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import passion.togedu.domain.*;
+import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.dto.sign.*;
 import passion.togedu.jwt.TokenProvider;
 import passion.togedu.repository.*;
 import java.security.SecureRandom;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -166,24 +168,53 @@ public class SignService {
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. fcm token 저장
+        // 5. 부모일 경우 childList도 반환, 자녀는 null로 반환
         if (tokenDto.getRole().equals("Parent")){
             Parent parent = parentRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
             parent.setFcmToken(requestDto.getFcmToken());
             parentRepository.save(parent);
+
+            // childList 생성
+            List<ChildIdAndName> childList = new ArrayList<>();
+            for (ParentChild parentChild: parent.getParentChildList()){
+                ChildIdAndName childIdAndName = ChildIdAndName.builder()
+                        .childId(parentChild.getChild().getId())
+                        .name(parentChild.getChild().getName())
+                        .build();
+                childList.add(childIdAndName);
+            }
+            
+            return SignInResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .msg("로그인 성공")
+                    .role(tokenDto.getRole())
+                    .grantType(tokenDto.getGrantType())
+                    .token(tokenDto.getAccessToken())
+                    .childList(childList)
+                    .build();
+
         } else if (tokenDto.getRole().equals("Child")) {
             Child child = childRepository.findById(Integer.parseInt(authentication.getName())).orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
             child.setFcmToken(requestDto.getFcmToken());
             childRepository.save(child);
+
+            return SignInResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .msg("로그인 성공")
+                    .role(tokenDto.getRole())
+                    .grantType(tokenDto.getGrantType())
+                    .token(tokenDto.getAccessToken())
+                    .build();
+        } else {
+            return SignInResponseDto.builder()
+                    .success(Boolean.FALSE)
+                    .msg("로그인 실패: role을 이상하게 부여받음")
+                    .role(tokenDto.getRole())
+                    .grantType(tokenDto.getGrantType())
+                    .token(tokenDto.getAccessToken())
+                    .build();
         }
 
-        // 5. 토큰 발급
-        return SignInResponseDto.builder()
-                .success(Boolean.TRUE)
-                .msg("로그인 성공")
-                .role(tokenDto.getRole())
-                .grantType(tokenDto.getGrantType())
-                .token(tokenDto.getAccessToken())
-                .build();
     }
 
     @Transactional
