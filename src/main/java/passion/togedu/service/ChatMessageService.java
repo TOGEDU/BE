@@ -41,7 +41,7 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         // FastAPI 서버로 채팅 메시지 전송 및 답변 받기
-        String responseMessage = sendChatToFastApi(chatMessage);
+        String responseMessage = sendChatToFastApi(chatMessageRequestDto.getMessage());
 
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
@@ -54,7 +54,7 @@ public class ChatMessageService {
         return new ChatMessageResponseDto(chatMessage);
     }
 
-    public String sendChatToFastApi(ChatMessage chatMessage) {
+    public String sendChatToFastApi(String chatMessage) {
         try {
             // HTTP client 만들기
             HttpClient client = HttpClient.newHttpClient();
@@ -62,9 +62,7 @@ public class ChatMessageService {
             // JSON 형태로 만들기
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode json = objectMapper.createObjectNode();
-            json.put("id", chatMessage.getId());
-            json.put("message", chatMessage.getMessage());
-            json.put("chat_room_id", chatMessage.getChatRoom().getId());
+            json.put("message", chatMessage);
 
             // HTTP request 만들기
             HttpRequest request = HttpRequest.newBuilder()
