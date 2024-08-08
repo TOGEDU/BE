@@ -11,6 +11,8 @@ import passion.togedu.dto.DailyQuestion.DailyQuestionResponseDto;
 import passion.togedu.repository.DailyQuestionRecordRepository;
 import passion.togedu.repository.DailyQuestionRepository;
 import passion.togedu.repository.ParentRepository;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class DailyQuestionService {
         //답변데이터 개수
         Integer count = dailyQuestionRecordRepository.countByUserId(userId);
         //오늘 날짜에 기록 존재 여부
-        boolean exists = dailyQuestionRecordRepository.existsByParentIdAndDate(userId,LocalDate.now());
+        boolean exists = dailyQuestionRecordRepository.existsByParentIdAndDate(userId, LocalDate.now());
         if (!exists){
             //오늘 질문 기록이 없을때, 오늘의 질문만 보여주기.
              String questionText = dailyQuestionRepository.findById(count+1)
