@@ -3,6 +3,7 @@ package passion.togedu.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.ChatMessage;
 import passion.togedu.domain.ChatRoom;
@@ -10,14 +11,16 @@ import passion.togedu.dto.chat.ChatMessageRequestDto;
 import passion.togedu.dto.chat.ChatMessageResponseDto;
 import passion.togedu.repository.ChatMessageRepository;
 import passion.togedu.repository.ChatRoomRepository;
-import passion.togedu.repository.ChildRepository;
-
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
@@ -50,7 +53,7 @@ public class ChatMessageService {
                 .build();
         chatMessageRepository.save(responseChatMessage);
 
-        return new ChatMessageResponseDto(chatMessage);
+        return new ChatMessageResponseDto(responseChatMessage);
     }
 
     public String sendChatToFastApi(String chatMessage) {
@@ -63,12 +66,17 @@ public class ChatMessageService {
             ObjectNode json = objectMapper.createObjectNode();
             json.put("message", chatMessage);
 
+            String urlWithParams = FASTAPI_URL + "/chat?message=" + URLEncoder.encode(chatMessage, StandardCharsets.UTF_8);
+
             // HTTP request 만들기
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(FASTAPI_URL))
+                    .uri(URI.create(urlWithParams))
                     .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                    .GET()
                     .build();
+
+            log.info(request.toString()+ "\n" + request.uri());
+            log.info(json.toString());
             // 보내고 답변받기
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -81,6 +89,8 @@ public class ChatMessageService {
             }
 
         } catch (Exception e) {
+            // 예외 메시지와 스택 트레이스를 로그에 출력
+            log.error("Exception occurred: " + e.getMessage(), e);
             throw new RuntimeException("잘못된 메세지", e);
         }
     }
