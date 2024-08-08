@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
     //채팅방 채팅 전부 조회
-    List<ChatMessage> findAllByChatRoom(ChatRoom chatRoom);
+    List<ChatMessage> findByChatRoomId(Integer chatRoomId);
+
+    List<ChatMessage> findAllByChatRoomId(Integer roomId);
 }

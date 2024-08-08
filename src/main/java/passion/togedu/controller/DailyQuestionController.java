@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import passion.togedu.dto.DailyQuestion.DailyQuestionDto;
 import passion.togedu.dto.DailyQuestion.DailyQuestionRequestDto;
 import passion.togedu.dto.DailyQuestion.DailyQuestionResponseDto;
 import passion.togedu.dto.main.MainStatDto;
@@ -21,10 +22,17 @@ import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 @RequestMapping("/api/dailyquestion")
 public class DailyQuestionController {
     private final DailyQuestionService dailyQuestionService;
+    //목록조회
     @GetMapping("")
     public List<DailyQuestionResponseDto> getDailyQuestionList() {
         Integer userId = getCurrentMemberId();
         return dailyQuestionService.getDailyQuestionListDto(userId);
+    }
+    //질문조회
+    @GetMapping("/today")
+    public DailyQuestionDto getDailyQuestion(){
+        Integer userId = getCurrentMemberId();
+        return dailyQuestionService.showQuestion(userId);
     }
 
     @PostMapping("")

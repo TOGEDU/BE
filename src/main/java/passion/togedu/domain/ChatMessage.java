@@ -24,14 +24,16 @@ public class ChatMessage {
     @Column(length = 500)
     private String message;
 
+    private Integer role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
     @Builder
-    public ChatMessage(Integer id, String message, ChatRoom chatRoom) {
-        this.id = id;
+    public ChatMessage(String message, Integer role, ChatRoom chatRoom) {
         this.message = message;
+        this.role = role;
         this.chatRoom = chatRoom;
     }
 }

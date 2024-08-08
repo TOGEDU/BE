@@ -16,7 +16,7 @@ import java.util.List;
 public class FCMConfig {
     @Bean
     public FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("togedu-432cf-firebase-adminsdk-6we7c-3ece66414e.json");
+        ClassPathResource resource = new ClassPathResource("cloning-195cf-firebase-adminsdk-ewhjt-cb835212af.json");
         InputStream refreshToken = resource.getInputStream();
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();

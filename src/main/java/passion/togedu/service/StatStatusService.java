@@ -15,9 +15,8 @@ import java.util.List;
 public class StatStatusService {
     private final DailyQuestionRecordRepository dailyQuestionRecordRepository;
     private final DiaryRepository diaryRepository;
-    List<StatStatusDto> weekCalendar = new ArrayList<>();
-
     public List<StatStatusDto> getStatStatusDto(Integer userId) {
+        List<StatStatusDto> weekCalendar = new ArrayList<>();
         //오늘
         LocalDate now = LocalDate.now();
         // 현재 요일
