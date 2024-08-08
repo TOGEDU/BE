@@ -9,22 +9,13 @@ import passion.togedu.domain.ChatRoom;
 @Getter
 @NoArgsConstructor
 public class ChatMessageRequestDto {
-    private Integer id;
+    //채팅 추가 시, 필요한 내용
     private String message;
-    private ChatRoom chatRoom;
+    private Integer chatRoomId;
 
     @Builder
-    public ChatMessageRequestDto(Integer id, String message, ChatRoom chatRoom) {
-        this.id = id;
+    public ChatMessageRequestDto( String message,Integer chatRoomId) {
         this.message = message;
-        this.chatRoom = chatRoom;
-    }
-
-    public ChatMessage toEntity() {
-        return ChatMessage.builder()
-                .id(this.id)
-                .message(this.message)
-                .chatRoom(this.chatRoom)
-                .build();
+        this.chatRoomId = chatRoomId;
     }
 }

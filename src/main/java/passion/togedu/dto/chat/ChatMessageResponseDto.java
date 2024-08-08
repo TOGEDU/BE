@@ -6,14 +6,16 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 public class ChatMessageResponseDto {
-    private Integer id;
+    //채팅 조회시, 채팅 하나당 보여줄 내용
+
     private String message;
+    private Integer role;
     private String time;
 
-    public ChatMessageResponseDto(ChatMessage entity) {
-        this.id = entity.getId();
-        this.message = entity.getMessage();
+    public ChatMessageResponseDto(ChatMessage message) {
+        this.message = message.getMessage();
+        this.role = message.getRole();
         //LocalDateTime -> String변환
-        this.time = entity.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        this.time = message.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         }
 }

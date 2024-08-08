@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import passion.togedu.dto.stat.StatStatusDto;
-import passion.togedu.service.MainStatService;
 import passion.togedu.service.StatStatusService;
 
 

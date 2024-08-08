@@ -35,6 +35,6 @@ public interface DailyQuestionRecordRepository extends JpaRepository<DailyQuesti
 
     //userId와 QuestionId로 답변 데이터 찾기
     @Query("SELECT dqr FROM DailyQuestionRecord dqr WHERE dqr.parent.id = :userId AND dqr.dailyQuestion.id = :questionId")
-    Optional<DailyQuestionRecord> findByUserIdAndQuestionId(@Param("userId") Integer userId, @Param("questionId") Integer questionId);
+    DailyQuestionRecord findByUserIdAndQuestionId(@Param("userId") Integer userId, @Param("questionId") Integer questionId);
 
 }
