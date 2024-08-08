@@ -13,7 +13,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("*"); // 보안 강화를 위해 리액트 네이티브 앱의 도메인을 명시적으로 허용하는 게 좋다고 함.
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

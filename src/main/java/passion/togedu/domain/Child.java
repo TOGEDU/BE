@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,9 +35,6 @@ public class Child {
 
     @Column(length = 500)
     private String password;
-
-    @Column(length = 500)
-    private String generatedTtsPath;
 
     @Column(length = 500)
     private String generatedChatbotPath;

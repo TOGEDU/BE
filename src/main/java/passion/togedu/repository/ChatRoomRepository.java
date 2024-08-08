@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import passion.togedu.domain.ChatRoom;
 import passion.togedu.domain.DailyQuestion;
 
-import java.util.List;
+
 import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {

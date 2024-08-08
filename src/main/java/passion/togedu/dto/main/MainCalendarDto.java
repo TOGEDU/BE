@@ -1,9 +1,6 @@
 package passion.togedu.dto.main;
 
-
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
 /*@Builder

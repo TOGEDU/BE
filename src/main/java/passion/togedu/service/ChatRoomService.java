@@ -9,17 +9,9 @@ import passion.togedu.dto.chat.ChatRoomRequestDto;
 import passion.togedu.dto.chat.ChatRoomResponseDto;
 import passion.togedu.repository.ChatMessageRepository;
 import passion.togedu.repository.ChatRoomRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import passion.togedu.repository.ChildRepository;
 
 @RequiredArgsConstructor

@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import passion.togedu.domain.ChatMessage;
 import passion.togedu.dto.chat.*;
 import passion.togedu.service.ChatRoomService;
-
 import java.util.List;
 
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;

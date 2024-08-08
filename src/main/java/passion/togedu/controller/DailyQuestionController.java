@@ -7,13 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import passion.togedu.dto.DailyQuestion.DailyQuestionDto;
 import passion.togedu.dto.DailyQuestion.DailyQuestionRequestDto;
 import passion.togedu.dto.DailyQuestion.DailyQuestionResponseDto;
-import passion.togedu.dto.main.MainStatDto;
-import passion.togedu.dto.mypage.ChildIdAndName;
 import passion.togedu.service.DailyQuestionService;
-import passion.togedu.service.MainStatService;
-
 import java.util.List;
-
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 
 @RestController

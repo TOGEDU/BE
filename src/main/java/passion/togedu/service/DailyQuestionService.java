@@ -2,7 +2,6 @@ package passion.togedu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import passion.togedu.domain.Child;
 import passion.togedu.domain.DailyQuestion;
 import passion.togedu.domain.DailyQuestionRecord;
 import passion.togedu.domain.Parent;
@@ -12,8 +11,6 @@ import passion.togedu.dto.DailyQuestion.DailyQuestionResponseDto;
 import passion.togedu.repository.DailyQuestionRecordRepository;
 import passion.togedu.repository.DailyQuestionRepository;
 import passion.togedu.repository.ParentRepository;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

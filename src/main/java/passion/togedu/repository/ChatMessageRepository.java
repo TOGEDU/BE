@@ -3,7 +3,6 @@ package passion.togedu.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import passion.togedu.domain.ChatMessage;
 import passion.togedu.domain.ChatRoom;
-
 import java.util.List;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
