@@ -18,13 +18,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 @RequiredArgsConstructor
 @Service
-
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
 
 
-    private static final String FASTAPI_URL = "http://127.0.0.1:8000"; // Replace with your FastAPI server URL
+    private static final String FASTAPI_URL = "http://127.0.0.1:8000/chat"; // Replace with your FastAPI server URL
 
     //채팅추가
     public ChatMessageResponseDto addMessage(ChatMessageRequestDto chatMessageRequestDto) {
