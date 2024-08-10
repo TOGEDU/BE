@@ -83,7 +83,8 @@ public class DailyQuestionService {
                     .text(dailyQuestionRequestDto.getText())
                     .date(LocalDateTime.now())
                     .build();
-            dailyQuestionRecordRepository.save(dailyQuestionRecord);}
+            dailyQuestionRecordRepository.save(dailyQuestionRecord);
+        }
         else {
             throw new RuntimeException("이미 질문의 답변이 존재합니다.");
         }
