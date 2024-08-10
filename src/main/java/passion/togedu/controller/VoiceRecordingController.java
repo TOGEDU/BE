@@ -6,11 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.dto.voiceRecording.VoiceRecordingRecordDto;
 import passion.togedu.dto.voiceRecording.VoiceRecordingSentenceDto;
+import passion.togedu.dto.voiceRecording.VoiceResponseDto;
 import passion.togedu.service.VoiceRecordingService;
 import java.io.IOException;
 import java.util.List;
 
-@RequestMapping("/api/tts")
+import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
+
+@RequestMapping("/api/voice")
 @RestController
 @RequiredArgsConstructor
 public class VoiceRecordingController {
@@ -18,9 +21,10 @@ public class VoiceRecordingController {
     private final VoiceRecordingService voiceRecordingService;
 
     @GetMapping
-    public ResponseEntity<List<VoiceRecordingSentenceDto>> getAllSentences() {
-        List<VoiceRecordingSentenceDto> sentences = voiceRecordingService.getAllSentences();
-        return ResponseEntity.ok(sentences);
+    public ResponseEntity<VoiceResponseDto> getVoiceRecordStatusAndSentences() {
+        Integer id = getCurrentMemberId();
+        VoiceResponseDto responseDto = voiceRecordingService.getVoiceRecordStatusAndSentences(id);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/record")

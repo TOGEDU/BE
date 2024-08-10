@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class VoiceRecordingSentenceDto {
     private Integer id;
-    private String sentenceText;
+    private String text;
 }
