@@ -16,7 +16,6 @@ import passion.togedu.repository.ChildRepository;
 import passion.togedu.repository.DiaryRepository;
 import passion.togedu.repository.ParentChildRepository;
 import passion.togedu.repository.ParentRepository;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -157,16 +156,27 @@ public class DiaryService {
     }
 
     @Transactional
-    public DiaryRequestDto updateDiary(int id, DiaryRequestDto diaryRequestDto, MultipartFile file) throws IOException {
-        Diary existingDiary = getDiaryById(id);
-        String imgUrl = s3UploadService.saveFile(file);
+    public SignUpResponseDto updateDiary(Integer diaryId, String title, String content, MultipartFile image) throws IOException {
+        // 일기 존재 여부 확인
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다."));
 
-        existingDiary.setDate(diaryRequestDto.getDate());
-        existingDiary.setContent(diaryRequestDto.getText());
-        existingDiary.setImgUrl(imgUrl);
+        diary.setTitle(title);
+        diary.setContent(content);
 
-        diaryRepository.save(existingDiary);
-        return DiaryRequestDto.fromEntity(existingDiary);
+        String imageUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            imageUrl = s3UploadService.saveFile(image);
+        }
+        diary.setImgUrl(imageUrl);
+
+        diaryRepository.save(diary);
+
+        return SignUpResponseDto.builder()
+                .success(Boolean.TRUE)
+                .msg("육아일기 수정 성공")
+                .build();
     }
 
     @Transactional
