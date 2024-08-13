@@ -27,8 +27,11 @@ public class Diary {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "text", length = 1000)
-    private String text;
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "content", length = 1000)
+    private String content;
 
     @Column(name = "img_url", length = 500)
     private String imgUrl;
