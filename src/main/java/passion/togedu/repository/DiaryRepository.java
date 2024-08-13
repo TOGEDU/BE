@@ -35,4 +35,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
     // 특정 ParentChildId들과 날짜에 해당하는 일기를 조회하는 메서드
     @Query("SELECT d FROM Diary d WHERE d.parentChild.id IN :parentChildIdList AND d.date = :date")
     List<Diary> findDiariesByParentChildIdsAndDate(@Param("parentChildIdList") List<Integer> parentChildIdList, @Param("date") LocalDate date);
+
+    @Query("SELECT d.parentChild.id FROM Diary d WHERE d.parentChild.id IN :parentChildIdList AND d.date = :date")
+    List<Integer> findParentChildIdsWithDiaryOnDate(@Param("parentChildIdList") List<Integer> parentChildIdList, @Param("date") LocalDate date);
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
 import passion.togedu.dto.diary.DiaryCalendarResponseDto;
+import passion.togedu.dto.diary.DiaryCheckAvailabilityResponseDto;
 import passion.togedu.dto.diary.DiaryRecordResponseDto;
 import passion.togedu.dto.diary.DiaryRequestDto;
 import passion.togedu.service.DiaryService;
@@ -34,6 +35,13 @@ public class DiaryController {
         Integer id = getCurrentMemberId();
         List<DiaryRecordResponseDto> recordResponseDtoList = diaryService.getDiariesByDate(date, id);
         return ResponseEntity.ok(recordResponseDtoList);
+    }
+
+    @GetMapping("/check-availability")
+    public ResponseEntity<List<DiaryCheckAvailabilityResponseDto>> checkDiaryAvailability(@RequestParam("date") LocalDate date){
+        Integer id = getCurrentMemberId();
+        List<DiaryCheckAvailabilityResponseDto> responseDtoList = diaryService.checkDiaryAvailability(date, id);
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @PostMapping("")

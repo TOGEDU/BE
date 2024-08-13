@@ -67,6 +67,47 @@ public class DiaryService {
     }
 
     @Transactional
+    public List<DiaryRecordResponseDto> getDiariesByDate(LocalDate date, Integer parentId) {
+        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        List<Integer> parentChildIdList = parent.getParentChildList()
+                .stream()
+                .map(ParentChild::getId)
+                .toList();
+
+        List<Diary> diaryList = diaryRepository.findDiariesByParentChildIdsAndDate(parentChildIdList, date);
+        return diaryList.stream()
+                .map(diary -> DiaryRecordResponseDto.builder()
+                        .childName(diary.getParentChild().getChild().getName())
+                        .diaryId(diary.getId())
+                        .date(diary.getDate())
+                        .title(diary.getTitle())
+                        .image(diary.getImgUrl())
+                        .content(diary.getContent()).build())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<DiaryCheckAvailabilityResponseDto> checkDiaryAvailability(LocalDate date, Integer parentId){
+        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        List<ParentChild> parentChildList = parent.getParentChildList();
+        List<Integer> parentChildIdList = parentChildList
+                .stream()
+                .map(ParentChild::getId)
+                .toList();
+
+        List<Integer> parentChildIdListWithDiary = diaryRepository.findParentChildIdsWithDiaryOnDate(parentChildIdList, date);
+
+        return parentChildList.stream()
+                .map(parentChild -> DiaryCheckAvailabilityResponseDto.builder()
+                        .parentChildId(parentChild.getId())
+                        .name(parentChild.getChild().getName())
+                        .isHave(parentChildIdListWithDiary.contains(parentChild.getId()))
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public Diary createDiary(DiaryRequestDto diaryRequestDto, MultipartFile file) throws IOException {
         ParentChild parentChild = parentChildRepository.findById(diaryRequestDto.getParentChildId())
                 .orElseThrow(() -> new RuntimeException("ParentChild 사용자가 없습니다"));
@@ -98,26 +139,6 @@ public class DiaryService {
     @Transactional
     public Diary getDiaryById(int id) {
         return diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid diary ID: " + id));
-    }
-
-    @Transactional
-    public List<DiaryRecordResponseDto> getDiariesByDate(LocalDate date, Integer parentId) {
-        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
-        List<Integer> parentChildIdList = parent.getParentChildList()
-                .stream()
-                .map(ParentChild::getId)
-                .toList();
-
-        List<Diary> diaryList = diaryRepository.findDiariesByParentChildIdsAndDate(parentChildIdList, date);
-        return diaryList.stream()
-                .map(diary -> DiaryRecordResponseDto.builder()
-                        .childName(diary.getParentChild().getChild().getName())
-                        .diaryId(diary.getId())
-                        .date(diary.getDate())
-                        .title(diary.getTitle())
-                        .image(diary.getImgUrl())
-                        .content(diary.getContent()).build())
-                .collect(Collectors.toList());
     }
 
     @Transactional
