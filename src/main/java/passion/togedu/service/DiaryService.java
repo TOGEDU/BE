@@ -180,16 +180,6 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary getDiaryById(int id) {
-        return diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid diary ID: " + id));
-    }
-
-    @Transactional
-    public void deleteDiary(int id) {
-        diaryRepository.deleteById(id);
-    }
-
-    @Transactional
     public GalleryResponseDto getAllDiaryImageUrls(Integer id) {
         Child child = childRepository.findById(id).orElseThrow(()-> new RuntimeException("Child 사용자를 찾을 수 없습니다."));
         ParentChild parentChild = parentChildRepository.findByChild(child).orElseThrow(() -> new RuntimeException("Child 객체에 맞는 ParentChild 객체를 찾을 수 없습니다."));
