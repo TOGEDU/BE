@@ -1,22 +1,32 @@
 package passion.togedu.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
+import passion.togedu.dto.diary.DiaryCalendarResponseDto;
 import passion.togedu.dto.diary.DiaryRequestDto;
 import passion.togedu.service.DiaryService;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
+import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 
 @RestController
 @RequestMapping("/api/diary")
+@RequiredArgsConstructor
 public class DiaryController {
 
-    @Autowired
-    private DiaryService diaryService;
+    private final DiaryService diaryService;
+
+    @GetMapping("/calendar")
+    public ResponseEntity<DiaryCalendarResponseDto> getDiaryCalendar(@RequestParam("month") YearMonth month){
+        Integer id = getCurrentMemberId();
+        DiaryCalendarResponseDto responseDto = diaryService.getDiaryCalendar(month, id);
+        return ResponseEntity.ok(responseDto);
+    }
 
     @GetMapping(value = "/home", produces = "application/json")
     public ResponseEntity<Response> getDiariesByDate(@RequestParam("date") String date) {

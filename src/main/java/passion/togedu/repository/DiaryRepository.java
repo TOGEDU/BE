@@ -28,4 +28,9 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
     List<Diary> findByParentChild(ParentChild parentChild);
 
+    // 특정 ParentChildId들과 날짜 범위 내에 있는 일기를 모두 조회하는 메서드
+    @Query("SELECT d FROM Diary d WHERE d.parentChild.id IN :parentChildIdList AND d.date BETWEEN :startDate AND :endDate")
+    List<Diary> findDiariesByParentChildIdsAndDateBetween(List<Integer> parentChildIdList, LocalDate startDate, LocalDate endDate);
+
+
 }

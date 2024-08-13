@@ -22,7 +22,7 @@ public class DiaryRequestDto {
         return DiaryRequestDto.builder()
                 .parentChildId(diary.getParentChild().getId())
                 .date(diary.getDate())
-                .text(diary.getText())
+                .text(diary.getContent())
                 .imgUrl(diary.getImgUrl())
                 .build();
     }
