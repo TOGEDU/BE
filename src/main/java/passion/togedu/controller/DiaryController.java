@@ -9,6 +9,7 @@ import passion.togedu.dto.diary.DiaryCalendarResponseDto;
 import passion.togedu.dto.diary.DiaryCheckAvailabilityResponseDto;
 import passion.togedu.dto.diary.DiaryRecordResponseDto;
 import passion.togedu.dto.diary.DiaryRequestDto;
+import passion.togedu.dto.sign.SignUpResponseDto;
 import passion.togedu.service.DiaryService;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -45,10 +46,23 @@ public class DiaryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> createDiary(@RequestPart("diaryRequestDto") DiaryRequestDto diaryRequestDto,
-                                              @RequestPart("file") MultipartFile file) throws IOException {
-        diaryService.createDiary(diaryRequestDto, file);
-        return ResponseEntity.ok("육아일기가 기록되었습니다.");
+    public ResponseEntity<SignUpResponseDto> createDiary(
+            @RequestParam("parentChildId") Integer parentChildId,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("image") MultipartFile image){
+        Integer id = getCurrentMemberId();
+        try {
+            SignUpResponseDto responseDto = diaryService.createDiary(parentChildId, date, title, content, image, id);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(SignUpResponseDto.builder()
+                    .success(Boolean.FALSE)
+                    .msg(e.getMessage())
+                    .build()
+            );
+        }
     }
 
     @PutMapping("/{id}")

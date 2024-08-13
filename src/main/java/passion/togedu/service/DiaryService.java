@@ -11,6 +11,7 @@ import passion.togedu.domain.ParentChild;
 import passion.togedu.dto.diary.*;
 import passion.togedu.dto.gallery.GalleryResponseDto;
 import passion.togedu.dto.gallery.Photo;
+import passion.togedu.dto.sign.SignUpResponseDto;
 import passion.togedu.repository.ChildRepository;
 import passion.togedu.repository.DiaryRepository;
 import passion.togedu.repository.ParentChildRepository;
@@ -19,10 +20,7 @@ import passion.togedu.repository.ParentRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,19 +106,54 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary createDiary(DiaryRequestDto diaryRequestDto, MultipartFile file) throws IOException {
-        ParentChild parentChild = parentChildRepository.findById(diaryRequestDto.getParentChildId())
-                .orElseThrow(() -> new RuntimeException("ParentChild 사용자가 없습니다"));
+    public SignUpResponseDto createDiary(Integer parentChildId, LocalDate date, String title, String content, MultipartFile image, Integer parentId) throws IOException {
+        if (parentChildId == -100){
+            // 로그인된 사용자의 모든 자녀에게 동일한 내용의 일기를 작성함.
+            List<ParentChild> parentChildList = parentRepository.findById(parentId)
+                    .orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."))
+                    .getParentChildList();
 
-        String imgUrl = s3UploadService.saveFile(file);
+            for (ParentChild parentChild: parentChildList){
+                createDiaryForParentChild(parentChild, date, title, content, image);
+            }
+
+            return SignUpResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .msg("모든 자녀에게 육아일기 작성 성공")
+                    .build();
+        } else {
+            ParentChild parentChild = parentChildRepository.findById(parentChildId)
+                    .orElseThrow(() -> new RuntimeException("ParentChild 사용자를 찾을 수 없습니다."));
+            createDiaryForParentChild(parentChild, date, title, content, image);
+            return SignUpResponseDto.builder()
+                    .success(Boolean.TRUE)
+                    .msg("육아일기 작성 성공")
+                    .build();
+        }
+    }
+
+    private void createDiaryForParentChild(ParentChild parentChild, LocalDate date, String title, String content, MultipartFile image) throws IOException {
+        // 동일한 자녀와 날짜에 대해 이미 작성된 일기가 있는지 확인
+        Optional<Diary> existingDiary = diaryRepository.findByParentChildIdAndDate(parentChild.getId(), date);
+        if (existingDiary.isPresent()) {
+            throw new RuntimeException("이미 해당 날짜에 일기가 작성되었습니다.");
+        }
+
+        String imgUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            imgUrl = s3UploadService.saveFile(image);
+        }
 
         Diary diary = Diary.builder()
                 .parentChild(parentChild)
-                .date(diaryRequestDto.getDate())
-                .content(diaryRequestDto.getText())
+                .date(date)
+                .title(title)
+                .content(content)
                 .imgUrl(imgUrl)
                 .build();
-        return diaryRepository.save(diary);
+
+        diaryRepository.save(diary);
     }
 
     @Transactional

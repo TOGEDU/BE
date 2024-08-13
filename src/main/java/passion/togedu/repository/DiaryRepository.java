@@ -8,6 +8,7 @@ import passion.togedu.domain.Diary;
 import passion.togedu.domain.ParentChild;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Integer> {
@@ -38,4 +39,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
     @Query("SELECT d.parentChild.id FROM Diary d WHERE d.parentChild.id IN :parentChildIdList AND d.date = :date")
     List<Integer> findParentChildIdsWithDiaryOnDate(@Param("parentChildIdList") List<Integer> parentChildIdList, @Param("date") LocalDate date);
+
+    // 특정 ParentChild ID와 날짜로 이미 작성된 일기가 있는지 확인하는 메서드
+    Optional<Diary> findByParentChildIdAndDate(Integer parentChildId, LocalDate date);
 }
