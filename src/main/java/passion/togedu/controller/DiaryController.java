@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import passion.togedu.domain.Diary;
 import passion.togedu.dto.diary.DiaryCalendarResponseDto;
+import passion.togedu.dto.diary.DiaryRecordResponseDto;
 import passion.togedu.dto.diary.DiaryRequestDto;
 import passion.togedu.service.DiaryService;
 import java.io.IOException;
@@ -28,11 +29,11 @@ public class DiaryController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping(value = "/home", produces = "application/json")
-    public ResponseEntity<Response> getDiariesByDate(@RequestParam("date") String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        List<Diary> diaryList = diaryService.getDiariesByDate(localDate);
-        return ResponseEntity.ok(new Response(true, localDate, diaryList));
+    @GetMapping("")
+    public ResponseEntity<List<DiaryRecordResponseDto>> getDiaryRecord(@RequestParam("date") LocalDate date){
+        Integer id = getCurrentMemberId();
+        List<DiaryRecordResponseDto> recordResponseDtoList = diaryService.getDiariesByDate(date, id);
+        return ResponseEntity.ok(recordResponseDtoList);
     }
 
     @PostMapping("")
