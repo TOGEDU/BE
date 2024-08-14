@@ -33,7 +33,7 @@ public class ChatRoomController {
 
     //내용 요약 후 채팅방 생성
     @GetMapping("/chatroom")
-    public ChatRoomRequestDto chat(@RequestParam(name = "prompt") String prompt) {
+    public ChatRoomResponseDto chat(@RequestParam(name = "prompt") String prompt) {
         Integer id = getCurrentMemberId();
         // prompt가 처음 물어보는 질문
         GPTRequestDto request = new GPTRequestDto(model, prompt + "를 15글자 이하의 명사구로 요약해줘");

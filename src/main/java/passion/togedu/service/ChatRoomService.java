@@ -24,11 +24,12 @@ public class ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChildRepository childRepository;
     private final ParentChildService parentChildService;
+    private final ChatMessageService chatMessageService;
 
     private static final String FASTAPI_URL = "http://127.0.0.1:8000"; // Replace with your FastAPI server URL
 
     //채팅방 생성
-    public ChatRoomRequestDto createRoom(Integer userId, String first, String summary){
+    public ChatRoomResponseDto createRoom(Integer userId, String first, String summary){
         Child child = childRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
@@ -50,7 +51,31 @@ public class ChatRoomService {
         // ChatMessage 저장
         chatMessageRepository.save(chatMessage);
 
-        return new ChatRoomRequestDto(chatRoom);
+        //처음 채팅에 대한 답변 얻기
+        String responseMessage = chatMessageService.sendChatToFastApi(first);
+
+        // FastAPI 서버의 답변을 새로운 메시지로 저장
+        ChatMessage responseChatMessage = ChatMessage.builder()
+                .message(responseMessage)
+                .role(1) //1이 AI
+                .chatRoom(chatRoom)
+                .build();
+        chatMessageRepository.save(responseChatMessage);
+
+        //Response내용
+
+        //부모 프로필 사진
+        Parent parent = parentRepository.findById(parentChildService.getParentIdByChildId(userId)).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        String profileImage = parent.getProfileImageUrl();
+        //보낸메세지랑 받은메세지 묶어서
+        List<ChatMessage> chatMessages = chatMessageRepository.findAllByChatRoomId(chatRoom.getId());
+
+        //메세지를 DTO로 변환
+        List<ChatMessageResponseDto> messageList = chatMessages.stream()
+                .map(ChatMessageResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getDate(), profileImage, messageList);
     }
 
     //채팅방 조회
@@ -68,7 +93,6 @@ public class ChatRoomService {
         //부모 프로필 사진
         Parent parent = parentRepository.findById(parentChildService.getParentIdByChildId(userId)).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
         String profileImage = parent.getProfileImageUrl();
-
 
         List<ChatMessage> chatMessages = chatMessageRepository.findAllByChatRoomId(roomId);
 
