@@ -8,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 public class DailyQuestionRequestDto {
-
     private Integer questionId;
     private String text;
 }

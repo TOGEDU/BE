@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import passion.togedu.domain.ChatMessage;
-import passion.togedu.domain.Summary;
+import passion.togedu.domain.Message;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class GPTResponseDto {
     @AllArgsConstructor
     public static class Choice {
         private int index;
-        private Summary message;
+        private Message message;
 
     }
 }
