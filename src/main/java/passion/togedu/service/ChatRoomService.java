@@ -13,13 +13,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import passion.togedu.repository.ChildRepository;
+import passion.togedu.repository.ParentRepository;
 
 @RequiredArgsConstructor
 @Service
 public class ChatRoomService {
+
+    private final ParentRepository parentRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChildRepository childRepository;
+    private final ParentChildService parentChildService;
 
     private static final String FASTAPI_URL = "http://127.0.0.1:8000"; // Replace with your FastAPI server URL
 
@@ -61,16 +65,20 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = chatRoomRepository.findByIdAndChild_Id(roomId, userId)
                 .orElseThrow(() -> new RuntimeException("채팅방을 찾을 수 없습니다."));
+        //부모 프로필 사진
+        Parent parent = parentRepository.findById(parentChildService.getParentIdByChildId(userId)).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
+        String profileImage = parent.getProfileImageUrl();
+
 
         List<ChatMessage> chatMessages = chatMessageRepository.findAllByChatRoomId(roomId);
 
-        // Convert messages to DTOs
+        //메세지를 DTO로 변환
         List<ChatMessageResponseDto> messageList = chatMessages.stream()
                 .map(ChatMessageResponseDto::new)
                 .collect(Collectors.toList());
 
-        // Return the response DTO
-        return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getDate(), messageList);
+
+        return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getDate(), profileImage, messageList);
     }
 
 }

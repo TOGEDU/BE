@@ -33,15 +33,14 @@ public class ChatRoomController {
 
     //내용 요약 후 채팅방 생성
     @GetMapping("/chatroom")
-    public ChatRoomRequestDto chat(@RequestParam(name = "prompt")String prompt){
+    public ChatRoomRequestDto chat(@RequestParam(name = "prompt") String prompt) {
         Integer id = getCurrentMemberId();
-        //prompt가 처음 물어보는 질문
-        //GPTRequestDto request = new GPTRequestDto(model, prompt+"를 15글자 이하의 명사구로 요약해줘");
-        //답변 들고오기
-        //GPTResponseDto chatGPTResponse =  template.postForObject(apiURL, request, GPTResponseDto.class);
-        //String summary = chatGPTResponse.getChoices().get(0).getMessage().getContent();
-        //첫문장과 요약가지고 채팅방 만들기
-        String summary = "요약문장입니다.";
+        // prompt가 처음 물어보는 질문
+        GPTRequestDto request = new GPTRequestDto(model, prompt + "를 15글자 이하의 명사구로 요약해줘");
+        // 답변 들고오기
+        GPTResponseDto chatGPTResponse = template.postForObject(apiURL, request, GPTResponseDto.class);
+        String summary = chatGPTResponse.getChoices().get(0).getMessage().getContent();
+        // 첫문장과 요약가지고 채팅방 만들기
         return chatRoomService.createRoom(id, prompt, summary);
     }
 
