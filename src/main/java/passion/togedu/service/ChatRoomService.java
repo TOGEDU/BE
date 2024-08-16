@@ -80,8 +80,8 @@ public class ChatRoomService {
     }
 
     //채팅방 조회
-    public List<ChatRoomRequestDto> findAllRooms(){
-        return chatRoomRepository.findAll().stream()
+    public List<ChatRoomRequestDto> findAllRooms(Integer childId) {
+        return chatRoomRepository.findByChildId(childId).stream()
                 .map(ChatRoomRequestDto::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.reverse(list);
