@@ -10,6 +10,7 @@ import passion.togedu.dto.chat.ChatRoomResponseDto;
 import passion.togedu.repository.ChatMessageRepository;
 import passion.togedu.repository.ChatRoomRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import passion.togedu.repository.ChildRepository;
@@ -79,10 +80,13 @@ public class ChatRoomService {
     }
 
     //채팅방 조회
-    public List<ChatRoomRequestDto> findAllRooms(){
-        return chatRoomRepository.findAll().stream()
+    public List<ChatRoomRequestDto> findAllRooms(Integer childId) {
+        return chatRoomRepository.findByChildId(childId).stream()
                 .map(ChatRoomRequestDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    Collections.reverse(list);
+                    return list;
+                }));
     }
 
     //채팅 내용 전체 조회

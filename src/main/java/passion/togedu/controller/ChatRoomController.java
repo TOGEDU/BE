@@ -47,7 +47,8 @@ public class ChatRoomController {
     // 채팅방 목록 조회
     @GetMapping("/rooms")
     public List<ChatRoomRequestDto> getAllRooms() {
-        return chatRoomService.findAllRooms();
+        Integer id = getCurrentMemberId();
+        return chatRoomService.findAllRooms(id);
     }
 
     //채팅방 내용조회
