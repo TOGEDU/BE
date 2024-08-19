@@ -3,8 +3,8 @@ package passion.togedu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.*;
-import passion.togedu.dto.chat.ChatMessageRequestDto;
 import passion.togedu.dto.chat.ChatMessageResponseDto;
+import passion.togedu.dto.chat.ChatRoomDto;
 import passion.togedu.dto.chat.ChatRoomRequestDto;
 import passion.togedu.dto.chat.ChatRoomResponseDto;
 import passion.togedu.repository.ChatMessageRepository;
@@ -80,13 +80,15 @@ public class ChatRoomService {
     }
 
     //채팅방 조회
-    public List<ChatRoomRequestDto> findAllRooms(Integer childId) {
-        return chatRoomRepository.findByChildId(childId).stream()
-                .map(ChatRoomRequestDto::new)
+    public ChatRoomRequestDto findAllRooms(Integer childId) {
+        List<ChatRoomDto> chatRoomList = chatRoomRepository.findByChildId(childId).stream()
+                .map(ChatRoomDto::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.reverse(list);
                     return list;
                 }));
+
+        return new ChatRoomRequestDto(chatRoomList);
     }
 
     //채팅 내용 전체 조회

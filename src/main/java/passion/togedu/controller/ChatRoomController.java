@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
-import passion.togedu.domain.ChatMessage;
 import passion.togedu.dto.chat.*;
 import passion.togedu.service.ChatRoomService;
 import java.util.List;
@@ -46,7 +44,7 @@ public class ChatRoomController {
 
     // 채팅방 목록 조회
     @GetMapping("/rooms")
-    public List<ChatRoomRequestDto> getAllRooms() {
+    public ChatRoomRequestDto getAllRooms() {
         Integer id = getCurrentMemberId();
         return chatRoomService.findAllRooms(id);
     }
