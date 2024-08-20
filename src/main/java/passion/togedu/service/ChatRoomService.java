@@ -53,8 +53,8 @@ public class ChatRoomService {
         chatMessageRepository.save(chatMessage);
 
         //처음 채팅에 대한 답변 얻기
-        String responseMessage = chatMessageService.sendChatToFastApi(first);
-
+        //String responseMessage = chatMessageService.sendChatToFastApi(first);
+        String responseMessage = first + "의 답변이요";
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
                 .message(responseMessage)
@@ -105,7 +105,10 @@ public class ChatRoomService {
         //메세지를 DTO로 변환
         List<ChatMessageResponseDto> messageList = chatMessages.stream()
                 .map(ChatMessageResponseDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    Collections.reverse(list);
+                    return list;
+                }));
 
 
         return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getDate(), profileImage, messageList);
