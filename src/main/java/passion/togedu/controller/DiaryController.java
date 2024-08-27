@@ -9,6 +9,8 @@ import passion.togedu.dto.diary.DiaryCheckAvailabilityResponseDto;
 import passion.togedu.dto.diary.DiaryRecordResponseDto;
 import passion.togedu.dto.sign.SignUpResponseDto;
 import passion.togedu.service.DiaryService;
+import passion.togedu.service.WhisperService;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -20,6 +22,17 @@ import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 public class DiaryController {
 
     private final DiaryService diaryService;
+    private final WhisperService whisperService;
+
+    @PostMapping("/transcribe")
+    public ResponseEntity<String> transcribeAudio(@RequestParam("file") MultipartFile file) {
+        try {
+            String transcription = whisperService.transcribe(file);
+            return ResponseEntity.ok(transcription);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Transcription failed: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/calendar")
     public ResponseEntity<DiaryCalendarResponseDto> getDiaryCalendar(@RequestParam("month") YearMonth month){
