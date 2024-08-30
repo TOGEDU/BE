@@ -59,12 +59,11 @@ public class DiaryController {
     public ResponseEntity<SignUpResponseDto> createDiary(
             @RequestParam("parentChildId") Integer parentChildId,
             @RequestParam("date") LocalDate date,
-            @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("image") MultipartFile image){
         Integer id = getCurrentMemberId();
         try {
-            SignUpResponseDto responseDto = diaryService.createDiary(parentChildId, date, title, content, image, id);
+            SignUpResponseDto responseDto = diaryService.createDiary(parentChildId, date, content, image, id);
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(SignUpResponseDto.builder()
@@ -78,11 +77,10 @@ public class DiaryController {
     @PutMapping("")
     public ResponseEntity<SignUpResponseDto> updateDiary(
             @RequestParam("diaryId") Integer diaryId,
-            @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("image") MultipartFile image){
         try {
-            SignUpResponseDto responseDto = diaryService.updateDiary(diaryId, title, content, image);
+            SignUpResponseDto responseDto = diaryService.updateDiary(diaryId, content, image);
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(SignUpResponseDto.builder()

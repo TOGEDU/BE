@@ -16,7 +16,6 @@ public class DiaryRecordResponseDto {
     private String childName;
     private Integer diaryId;
     private LocalDate date;
-    private String title;
     private String image;
     private String content;
 }

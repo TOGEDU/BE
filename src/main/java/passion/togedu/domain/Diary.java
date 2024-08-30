@@ -27,9 +27,6 @@ public class Diary {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "content", length = 1000)
     private String content;
 
