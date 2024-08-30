@@ -32,6 +32,7 @@ public class WhisperService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
+        // 파일 리소스를 생성할 때 m4a 형식으로 지정
         Resource fileAsResource = new ByteArrayResource(audioFile.getBytes()) {
             @Override
             public String getFilename() {
@@ -39,14 +40,18 @@ public class WhisperService {
             }
         };
 
+        // MultiValueMap에 파일과 추가 정보를 설정
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", fileAsResource);
-        body.add("model", "whisper-1");
+        body.add("file", fileAsResource);  // "file" 필드에 파일 추가
+        body.add("model", "whisper-1");  // Whisper 모델 정보 추가
 
+        // HttpEntity에 헤더와 바디 설정
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
+        // Whisper API에 POST 요청 전송
         ResponseEntity<String> response = restTemplate.postForEntity(whisperUrl, requestEntity, String.class);
 
+        // 응답 본문 반환
         return response.getBody();
     }
 }

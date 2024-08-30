@@ -77,7 +77,6 @@ public class DiaryService {
                         .childName(diary.getParentChild().getChild().getName())
                         .diaryId(diary.getId())
                         .date(diary.getDate())
-                        .title(diary.getTitle())
                         .image(diary.getImgUrl())
                         .content(diary.getContent()).build())
                 .collect(Collectors.toList());
@@ -105,7 +104,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public SignUpResponseDto createDiary(Integer parentChildId, LocalDate date, String title, String content, MultipartFile image, Integer parentId) throws IOException {
+    public SignUpResponseDto createDiary(Integer parentChildId, LocalDate date,  String content, MultipartFile image, Integer parentId) throws IOException {
         if (parentChildId == -100){
             // 로그인된 사용자의 모든 자녀에게 동일한 내용의 일기를 작성함.
             List<ParentChild> parentChildList = parentRepository.findById(parentId)
@@ -113,7 +112,7 @@ public class DiaryService {
                     .getParentChildList();
 
             for (ParentChild parentChild: parentChildList){
-                createDiaryForParentChild(parentChild, date, title, content, image);
+                createDiaryForParentChild(parentChild, date, content, image);
             }
 
             return SignUpResponseDto.builder()
@@ -123,7 +122,7 @@ public class DiaryService {
         } else {
             ParentChild parentChild = parentChildRepository.findById(parentChildId)
                     .orElseThrow(() -> new RuntimeException("ParentChild 사용자를 찾을 수 없습니다."));
-            createDiaryForParentChild(parentChild, date, title, content, image);
+            createDiaryForParentChild(parentChild, date, content, image);
             return SignUpResponseDto.builder()
                     .success(Boolean.TRUE)
                     .msg("육아일기 작성 성공")
@@ -131,7 +130,7 @@ public class DiaryService {
         }
     }
 
-    private void createDiaryForParentChild(ParentChild parentChild, LocalDate date, String title, String content, MultipartFile image) throws IOException {
+    private void createDiaryForParentChild(ParentChild parentChild, LocalDate date, String content, MultipartFile image) throws IOException {
         // 동일한 자녀와 날짜에 대해 이미 작성된 일기가 있는지 확인
         Optional<Diary> existingDiary = diaryRepository.findByParentChildIdAndDate(parentChild.getId(), date);
         if (existingDiary.isPresent()) {
@@ -147,7 +146,6 @@ public class DiaryService {
         Diary diary = Diary.builder()
                 .parentChild(parentChild)
                 .date(date)
-                .title(title)
                 .content(content)
                 .imgUrl(imgUrl)
                 .build();
@@ -156,12 +154,12 @@ public class DiaryService {
     }
 
     @Transactional
-    public SignUpResponseDto updateDiary(Integer diaryId, String title, String content, MultipartFile image) throws IOException {
+    public SignUpResponseDto updateDiary(Integer diaryId, String content, MultipartFile image) throws IOException {
         // 일기 존재 여부 확인
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new RuntimeException("일기를 찾을 수 없습니다."));
 
-        diary.setTitle(title);
+
         diary.setContent(content);
 
         String imageUrl = null;
