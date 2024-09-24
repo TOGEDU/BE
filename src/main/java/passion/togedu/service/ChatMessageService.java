@@ -29,7 +29,7 @@ public class ChatMessageService {
     private static final String FASTAPI_URL = "http://127.0.0.1:8000"; // Replace with your FastAPI server URL
 
     //채팅추가
-    public ChatMessageResponseDto addMessage(ChatMessageRequestDto chatMessageRequestDto) {
+    public ChatMessageResponseDto addMessage(String jwtToken, ChatMessageRequestDto chatMessageRequestDto) {
         // ChatRoom ID를 이용해 ChatRoom을 검색
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageRequestDto.getChatRoomId())
                 .orElseThrow(() -> new RuntimeException("채팅방을 찾을 수 없습니다."));
@@ -43,7 +43,7 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         // FastAPI 서버로 채팅 메시지 전송 및 답변 받기
-        String responseMessage = sendChatToFastApi(chatMessageRequestDto.getMessage());
+        String responseMessage = sendChatToFastApi(jwtToken, chatMessageRequestDto.getMessage());
 
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
@@ -56,7 +56,7 @@ public class ChatMessageService {
         return new ChatMessageResponseDto(responseChatMessage);
     }
 
-    public String sendChatToFastApi(String chatMessage) {
+    public String sendChatToFastApi(String jwtToken, String chatMessage) {
         try {
             // HTTP client 만들기
             HttpClient client = HttpClient.newHttpClient();
@@ -72,6 +72,7 @@ public class ChatMessageService {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(urlWithParams))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + jwtToken)
                     .GET()
                     .build();
 

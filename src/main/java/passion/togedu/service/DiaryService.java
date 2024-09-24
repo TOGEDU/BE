@@ -37,7 +37,7 @@ public class DiaryService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public DiaryCalendarResponseDto getDiaryCalendar(YearMonth month, Integer parentId){
+    public DiaryCalendarResponseDto getDiaryCalendar(YearMonth month, Integer parentId){ // 특정 사용자의 특정 달에 해당하는 일기를 찾음
         Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent 사용자를 찾을 수 없습니다."));
         List<Integer> parentChildIdList = parent.getParentChildList()
                 .stream()
@@ -103,7 +103,7 @@ public class DiaryService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional // 일기 작성
     public SignUpResponseDto createDiary(Integer parentChildId, LocalDate date,  String content, MultipartFile image, Integer parentId) throws IOException {
         if (parentChildId == -100){
             // 로그인된 사용자의 모든 자녀에게 동일한 내용의 일기를 작성함.
