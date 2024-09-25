@@ -1,15 +1,14 @@
 package passion.togedu.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.client.RestTemplate;
 import passion.togedu.dto.chat.*;
+import passion.togedu.jwt.SecurityUtil;
 import passion.togedu.service.ChatRoomService;
-import java.util.List;
 
 import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 
@@ -21,26 +20,26 @@ import static passion.togedu.jwt.SecurityUtil.getCurrentMemberId;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @Value("${openai.model}")
-    private String model;
-    @Value("${openai.api.chat-url}")
-    private String apiURL;
-
-    @Autowired
-    private RestTemplate template;
-
     //내용 요약 후 채팅방 생성
     @GetMapping("/chatroom")
-    public ChatRoomResponseDto chat(@RequestParam(name = "prompt") String prompt) {
+    public ResponseEntity<ChatRoomResponseDto> chat(HttpServletRequest request, @RequestParam(name = "prompt") String prompt) {
         Integer id = getCurrentMemberId();
-        // prompt가 처음 물어보는 질문
-        GPTRequestDto request = new GPTRequestDto(model, prompt + "를 15글자 이하의 명사구로 요약해줘");
-        // 답변 들고오기
-        GPTResponseDto chatGPTResponse = template.postForObject(apiURL, request, GPTResponseDto.class);
-        String summary = chatGPTResponse.getChoices().get(0).getMessage().getContent();
-        // 첫문장과 요약가지고 채팅방 만들기
-        return chatRoomService.createRoom(id, prompt, summary);
+        try {
+            String jwtToken = SecurityUtil.resolveToken(request);
+            if (jwtToken == null) {
+                throw new RuntimeException("사용자의 JWT 토큰 정보를 찾을 수 없습니다.");
+            }
+            ChatRoomResponseDto responseDto = chatRoomService.createRoom(id, prompt, jwtToken);
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException e) {
+            log.error("Error adding chat message: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            log.error("Unexpected error: {}", e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
     }
+
 
     // 채팅방 목록 조회
     @GetMapping("/rooms")
