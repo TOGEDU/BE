@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import passion.togedu.domain.ChatMessage;
 import passion.togedu.domain.ChatRoom;
+import passion.togedu.dto.chat.ChatMessageHistoryDto;
 import passion.togedu.dto.chat.ChatMessageRequestDto;
 import passion.togedu.dto.chat.ChatMessageResponseDto;
 import passion.togedu.repository.ChatMessageRepository;
@@ -17,6 +18,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -43,7 +46,7 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         // FastAPI 서버로 채팅 메시지 전송 및 답변 받기
-        String responseMessage = sendChatToFastApi(jwtToken, chatMessageRequestDto.getMessage());
+        String responseMessage = sendChatToFastApi(jwtToken, chatMessageRequestDto.getChatRoomId(), chatMessageRequestDto.getMessage());
 
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
@@ -56,17 +59,28 @@ public class ChatMessageService {
         return new ChatMessageResponseDto(responseChatMessage);
     }
 
-    public String sendChatToFastApi(String jwtToken, String chatMessage) {
+    public String sendChatToFastApi(String jwtToken, Integer chatRoomId, String chatMessage) {
         try {
             // HTTP client 만들기
             HttpClient client = HttpClient.newHttpClient();
+
+            // 채팅방 내역 가져오기
+            List<ChatMessageHistoryDto> chatMessageHistoryDtoList = getChatHistory(chatRoomId);
+
+            // 채팅 내역을 하나의 문자열로 변환
+            StringBuilder chatHistoryBuilder = new StringBuilder();
+            for (ChatMessageHistoryDto historyDto : chatMessageHistoryDtoList) {
+                chatHistoryBuilder.append(historyDto.getRole()).append(": ").append(historyDto.getMessage()).append("\n");
+            }
+            String chatHistory = URLEncoder.encode(chatHistoryBuilder.toString(), StandardCharsets.UTF_8);
 
             // JSON 형태로 만들기
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode json = objectMapper.createObjectNode();
             json.put("message", chatMessage);
 
-            String urlWithParams = FASTAPI_URL + "/chat?message=" + URLEncoder.encode(chatMessage, StandardCharsets.UTF_8);
+            String urlWithParams = FASTAPI_URL + "/chat?message=" + URLEncoder.encode(chatMessage, StandardCharsets.UTF_8)
+                    + "&history=" + chatHistory;
 
             // HTTP request 만들기
             HttpRequest request = HttpRequest.newBuilder()
@@ -94,5 +108,19 @@ public class ChatMessageService {
             log.error("Exception occurred: " + e.getMessage(), e);
             throw new RuntimeException("잘못된 메세지", e);
         }
+    }
+
+    public List<ChatMessageHistoryDto> getChatHistory(Integer chatRoomId){
+        List<ChatMessage> chatMessageList = chatMessageRepository.findByChatRoomId(chatRoomId);
+        List<ChatMessageHistoryDto> chatMessageHistoryDtoList = new ArrayList<>();
+
+        for (ChatMessage chatMessage : chatMessageList){
+            ChatMessageHistoryDto dto = ChatMessageHistoryDto.builder()
+                    .role(chatMessage.getRole() == 0 ? "자녀" : "부모")
+                    .message(chatMessage.getMessage())
+                    .build();
+            chatMessageHistoryDtoList.add(dto);
+        }
+        return chatMessageHistoryDtoList;
     }
 }
