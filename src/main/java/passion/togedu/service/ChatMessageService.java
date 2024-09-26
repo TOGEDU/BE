@@ -17,6 +17,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -43,7 +45,7 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         // FastAPI 서버로 채팅 메시지 전송 및 답변 받기
-        String responseMessage = sendChatToFastApi(jwtToken, chatMessageRequestDto.getMessage());
+        String responseMessage = sendChatToFastApi(jwtToken, chatMessageRequestDto.getChatRoomId(), chatMessageRequestDto.getMessage());
 
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
@@ -56,17 +58,13 @@ public class ChatMessageService {
         return new ChatMessageResponseDto(responseChatMessage);
     }
 
-    public String sendChatToFastApi(String jwtToken, String chatMessage) {
+    public String sendChatToFastApi(String jwtToken, Integer chatRoomId, String chatMessage) {
         try {
             // HTTP client 만들기
             HttpClient client = HttpClient.newHttpClient();
 
-            // JSON 형태로 만들기
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode json = objectMapper.createObjectNode();
-            json.put("message", chatMessage);
-
-            String urlWithParams = FASTAPI_URL + "/chat?message=" + URLEncoder.encode(chatMessage, StandardCharsets.UTF_8);
+            String urlWithParams = FASTAPI_URL + "/chat?message=" + URLEncoder.encode(chatMessage, StandardCharsets.UTF_8)
+                    + "&chat_room_id=" + chatRoomId;
 
             // HTTP request 만들기
             HttpRequest request = HttpRequest.newBuilder()
@@ -77,12 +75,12 @@ public class ChatMessageService {
                     .build();
 
             log.info(request.toString()+ "\n" + request.uri());
-            log.info(json.toString());
             // 보내고 답변받기
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             // 답변 예외처리
             if (response.statusCode() == 200) {
+                ObjectMapper objectMapper = new ObjectMapper();
                 ObjectNode responseJson = objectMapper.readValue(response.body(), ObjectNode.class);
                 return responseJson.get("message").asText();
             } else {

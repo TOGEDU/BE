@@ -10,6 +10,7 @@ import passion.togedu.dto.chat.*;
 import passion.togedu.repository.ChatMessageRepository;
 import passion.togedu.repository.ChatRoomRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class ChatRoomService {
         chatMessageRepository.save(chatMessage);
 
         //처음 채팅에 대한 답변 얻기
-        String responseMessage = chatMessageService.sendChatToFastApi(jwtToken, prompt);
+        String responseMessage = chatMessageService.sendChatToFastApi(jwtToken, chatRoom.getId(), prompt);
         //String responseMessage = first + "의 답변이요";
         // FastAPI 서버의 답변을 새로운 메시지로 저장
         ChatMessage responseChatMessage = ChatMessage.builder()
@@ -121,7 +122,6 @@ public class ChatRoomService {
                     Collections.reverse(list);
                     return list;
                 }));
-
 
         return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getDate(), profileImage, messageList);
     }
