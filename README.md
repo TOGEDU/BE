@@ -1,5 +1,5 @@
 # CLONING BACKEND
-<img src="./image/Frame.png">'
+<img src="./image/Frame.png">
 
 # 😀 백엔드 팀원 및 역할
 
